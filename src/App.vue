@@ -1,24 +1,22 @@
 <template>
   <div id="app">
-    <Search></Search>
+    
   
-    <FooterView></FooterView>
+   <FooterView></FooterView>
   </div>
 </template>
 
 <script>
-  import Search from './components/Search.vue'
   import FooterView from './components/Footer.vue'
-
   export default {
-    components: {
-      Search,
+    components:{
       FooterView
     },
+    name: 'app',
     mounted() {
       this.slider()
     },
-    name: 'app',
+   
     data() {
       return {
         
@@ -33,5 +31,5 @@
 </script>
 
 <style>
-  @import './assets/css/base.css'
+  
 </style>
