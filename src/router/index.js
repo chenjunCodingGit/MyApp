@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 
 import home from '../components/Search.vue'
 import detail from '../components/About.vue'
-import shopcar from '../components/Home.vue'
+import shopcar from '../components/ShopCar.vue'
 import about from '../components/About.vue'
 
 Vue.use(VueRouter)
