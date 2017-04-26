@@ -1,10 +1,13 @@
 <template>
     <div>
-        <div>
+        <div @keyup="showResult($event)">
             <mt-search v-model="value"
                        cancel-text="取消"
-                       placeholder="搜索">
+                       placeholder="搜索"
+                       >
             </mt-search>
+        </div>
+        <div id="livesearch">{{searchValue}}
         </div>
     
         <div class="page-swipe">
@@ -21,8 +24,29 @@
 export default {
     data() {
         return {
-            value: ''
+            value: '',
+            searchValue:''
         }
+    },
+    computed:{
+
+    },
+    methods:{
+        showResult:function(e){
+            //console.log(e)
+            this.$http.get('http://127.0.0.1/PHP/demo04/search.php?q='+e.key).then(response=>{
+                //success callback
+                this.searchValue = response.data;
+                console.log(e.key)
+                
+            },error=>{
+                //error callback
+              console.log(error)  
+            })
+        }
+    },
+    created(){
+ 
     }
 }
 </script>
