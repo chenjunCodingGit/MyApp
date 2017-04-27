@@ -14,7 +14,7 @@
     },
     name: 'app',
     mounted() {
-      this.slider()
+      //this.slider()
     },
    
     data() {
@@ -23,9 +23,9 @@
       }
     },
     methods: {
-      slider() {
+      // slider() {
   
-      }
+      // }
     }
   }
 </script>

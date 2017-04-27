@@ -14,10 +14,12 @@
             <img slot="icon" src="../assets/img/about.png" width="24" height="24">
         </mt-cell>
         <mt-cell title="标题文字" icon="search" value="带 icon"></mt-cell>
+        
     </div>
 </template>
 <script>
 export default {
+    name:'app',
     data: function () {
         return {
             selected: '1',

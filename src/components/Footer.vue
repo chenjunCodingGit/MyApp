@@ -1,4 +1,5 @@
 <template>
+    <div>
     <div class="footer">
         <mt-tabbar v-model="selected">
             <mt-tab-item id="外卖">
@@ -19,9 +20,9 @@
             </mt-tab-item>
             
         </mt-tabbar>
-        <router-view></router-view>
-            
         
+    </div>
+    <router-view></router-view>
     </div>
 </template>
 <script>

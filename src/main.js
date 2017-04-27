@@ -5,8 +5,8 @@ import App from './App.vue'
 
 import router from './router/index' //全局引入路由
 
-import axios from 'axios' //全局引入ajax
-Vue.prototype.$http = axios
+import VueResource from 'vue-resource'; //全局引入ajax
+Vue.use(VueResource);
 
 Vue.use(MintUI)
 

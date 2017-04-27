@@ -1,17 +1,27 @@
 <template>
     <div>
-        <div @keyup="showResult($event)">
+        <div @keyup="get($event)" >
+            <router-link to="/searchInfo" >
             <mt-search v-model="value"
                        cancel-text="取消"
                        placeholder="搜索"
                        >
             </mt-search>
+            
+            <!--<ul>
+                <li v-for=" (value, index) in mydata">
+                    {{value}}
+                </li>
+            </ul>-->
+             </router-link>
+        <router-view></router-view> 
+            
+        
         </div>
-        <div id="livesearch">{{searchValue}}
-        </div>
+        
     
         <div class="page-swipe">
-            <mt-swipe :auto="1500">
+            <mt-swipe :auto="3500">
                 <mt-swipe-item :class="{slide1:true}">1</mt-swipe-item>
                 <mt-swipe-item :class="{slide2:true}">2</mt-swipe-item>
                 <mt-swipe-item :class="{slide3:true}">3</mt-swipe-item>
@@ -20,37 +30,44 @@
     </div>
 </template>
 <script>
-
 export default {
     data() {
         return {
             value: '',
-            searchValue:''
+            mydata:[]
         }
     },
     computed:{
-
+       
     },
     methods:{
-        showResult:function(e){
-            //console.log(e)
-            this.$http.get('http://127.0.0.1/PHP/demo04/search.php?q='+e.key).then(response=>{
-                //success callback
-                this.searchValue = response.data;
-                console.log(e.key)
-                
-            },error=>{
-                //error callback
-              console.log(error)  
-            })
+        get:function(ev){
+            //if (ev.keyCode == 38 || ev.keyCode == 40) return //上下键选择索引的value时，不再请求jsonp
+
+            this.$http.jsonp('https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su', {
+                    params: {
+                        wd: this.value
+                    },
+                    jsonp: 'cb'
+                }).then(function(res) {
+                    this.mydata = res.data.s;
+                }, function(err) {
+                    console.log(err)
+                })
+        },
+        location:function(){
+            window.location = 'searchInfo'
         }
     },
     created(){
- 
+        
     }
 }
 </script>
 <style lang="css">
+a{
+    text-decoration: none;
+}
 .mint-searchbar {
     background-color: #ff5c00;
 }
