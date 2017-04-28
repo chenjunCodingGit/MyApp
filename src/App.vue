@@ -1,13 +1,13 @@
 <template>
   <div id="app">
     
-  
-   <FooterView></FooterView>
+  <router-view></router-view>
+   <!--<FooterView></FooterView>-->
   </div>
 </template>
 
 <script>
-  import FooterView from './components/Footer.vue'
+  import FooterView from './components/NavBar.vue'
   export default {
     components:{
       FooterView

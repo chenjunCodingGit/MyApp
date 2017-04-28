@@ -7,16 +7,7 @@
                        placeholder="搜索"
                        >
             </mt-search>
-            
-            <!--<ul>
-                <li v-for=" (value, index) in mydata">
-                    {{value}}
-                </li>
-            </ul>-->
              </router-link>
-        <router-view></router-view> 
-            
-        
         </div>
         
     
@@ -68,8 +59,11 @@ export default {
 a{
     text-decoration: none;
 }
-.mint-searchbar {
-    background-color: #ff5c00;
+.mint-search .mint-searchbar {
+    background-color: #fb8c00;
+}
+.mint-search .mint-searchbar a{
+    color: #fff;
 }
 .mint-search{
     height: 100%;
@@ -84,6 +78,7 @@ a{
     font-size: 30px;
     text-align: center;
     margin-bottom: 20px;
+    margin-top: -616px;
 }
 
 .page-swipe .mint-swipe-item {

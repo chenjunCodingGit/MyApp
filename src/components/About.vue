@@ -1,41 +1,78 @@
 <template>
-    <div class='about'>
-       <div class="person" >
-
-       </div>
-        <mt-cell
-            title="标题文字"
-            href="//github.com"
-            is-link
-            value="带链接">
-        </mt-cell>
-        <mt-cell title="标题文字">
-            <span>icon 是图片</span>
-            <img slot="icon" src="../assets/img/about.png" width="24" height="24">
-        </mt-cell>
-        <mt-cell title="标题文字" icon="search" value="带 icon"></mt-cell>
-        
-    </div>
+	<div class='about'>
+		<div class="person">
+	
+		</div>
+		<mu-list>
+			<mu-list-item title="个人资料" toggleNested>
+				<mu-icon slot="left" value="person_outline" />
+			</mu-list-item>
+		</mu-list>
+		<mu-paper>
+			<mu-bottom-nav :value="bottomNav" @change="handleChange">
+				<mu-bottom-nav-item value="recents" title="待付款" icon="credit_card" />
+				<mu-bottom-nav-item value="favorites" title="待发货" icon="send" />
+				<mu-bottom-nav-item value="nearby" title="待收货" icon="description" />
+				<mu-bottom-nav-item value="over	" title="已完成" icon="assignment_turned_in" />
+			</mu-bottom-nav>
+		</mu-paper>
+		<mu-list>
+			<mu-list-item title="个人资料">
+				<mu-icon slot="left" value="person_outline" />
+			</mu-list-item>
+			<mu-list-item title="收货地址">
+				<mu-icon slot="left" value="location_on" />
+			</mu-list-item>
+			<mu-list-item title="密码管理" toggleNested>
+				<mu-icon slot="left" value="inbox" />
+				<mu-list-item slot="nested" title="我的推荐">
+					<mu-icon slot="left" value="grade" />
+				</mu-list-item>
+				<mu-list-item slot="nested" title="邀请礼包" toggleNested>
+					<mu-icon slot="left" value="inbox" />
+					<mu-list-item title="我的订单" slot="nested">
+						<mu-icon slot="left" value="drafts" />
+					</mu-list-item>
+					<mu-list-item title="我的订单" slot="nested">
+						<mu-icon slot="left" value="drafts" />
+					</mu-list-item>
+				</mu-list-item>
+			</mu-list-item>
+		</mu-list>
+		<!--
+			<mobile-tear-sheet>
+				
+			</mobile-tear-sheet>-->
+	</div>
 </template>
 <script>
+//import mobileTearSheet from '../../../components/mobileTearSheet'
 export default {
-    name:'app',
-    data: function () {
-        return {
-            selected: '1',
-            value:5
-        }
+	components: {
+		//'mobile-tear-sheet': mobileTearSheet
+	},
+	name: 'app',
+	data: function () {
+		return {
+			bottomNav: 'recents'
+		}
+	},
+	methods: {
+    handleChange (val) {
+      this.bottomNav = val
     }
+  }
 }
 </script>
 
 <style type='text/css' >
-.person{
-    width: 100%;
-    height: 15rem;
-    background-color: #ff5c00;
+.person {
+	width: 100%;
+	height: 15rem;
+	background-color: #ff5c00;
 }
+
 .is-selected {
-    background-color:#ff5c00;
+	background-color: #ff5c00;
 }
 </style>
