@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import FooterView from './components/NavBar.vue'
+  import FooterView from './components/public/NavBar.vue'
   export default {
     components:{
       FooterView

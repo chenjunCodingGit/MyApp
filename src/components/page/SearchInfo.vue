@@ -39,7 +39,7 @@ a {
 }
 
 .mysearch .mint-search .mint-searchbar {
-    background-color: #ff5c00;
+    background-color: #7e57c2;
 }
 
 .mint-search .mint-searchbar a {
@@ -67,6 +67,6 @@ a {
 .search-ui li {
     line-height: 40px;
     border-bottom: 1px solid #ececec;
-    color: #ff5c00;
+    color: #7e57c2;
 }
 </style>   

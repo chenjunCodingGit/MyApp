@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="home-search">
         <div @keyup="get($event)" >
             <router-link to="/searchInfo" >
             <mt-search v-model="value"
@@ -60,7 +60,7 @@ a{
     text-decoration: none;
 }
 .mint-search .mint-searchbar {
-    background-color: #fb8c00;
+    background-color: #7e57c2;
 }
 .mint-search .mint-searchbar a{
     color: #fff;
@@ -77,8 +77,8 @@ a{
     color: #fff;
     font-size: 30px;
     text-align: center;
-    margin-bottom: 20px;
-    margin-top: -616px;
+    margin-bottom: 200px;
+    margin-top: -623px;
 }
 
 .page-swipe .mint-swipe-item {
