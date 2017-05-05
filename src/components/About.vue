@@ -5,7 +5,7 @@
 			<router-link to="/login" class="login">登录</router-link>
 		</div>
 		<mu-list>
-			<mu-list-item title="个人资料" icon="keyboard_arrow_right">
+			<mu-list-item title="我的订单" icon="keyboard_arrow_right">
 				<mu-icon slot="left" value="person_outline" />
 				<mu-icon slot="right" value="keyboard_arrow_right" />
 			</mu-list-item>
@@ -27,36 +27,21 @@
 				<mu-icon slot="right" value="keyboard_arrow_right" />
 				<mu-icon slot="left" value="location_on" />
 			</mu-list-item>
-			<mu-list-item title="密码管理" toggleNested>
-				<mu-icon slot="left" value="inbox" />
-				<mu-list-item slot="nested" title="我的推荐">
-					<mu-icon slot="right" value="keyboard_arrow_right" />
-					<mu-icon slot="left" value="grade" />
-				</mu-list-item>
-				<mu-list-item slot="nested" title="邀请礼包" toggleNested>
-					<mu-icon slot="left" value="inbox" />
-					<mu-list-item title="我的订单" slot="nested">
-						<mu-icon slot="right" value="keyboard_arrow_right" />
-						<mu-icon slot="left" value="drafts" />
-					</mu-list-item>
-					<mu-list-item title="我的订单" slot="nested">
-						<mu-icon slot="right" value="keyboard_arrow_right" />
-						<mu-icon slot="left" value="drafts" />
-					</mu-list-item>
-				</mu-list-item>
+			<mu-list-item title="帐号设置">
+				<mu-icon slot="right" value="keyboard_arrow_right" />
+				<mu-icon slot="left" value="grade" />
+			</mu-list-item>
+			<mu-list-item title="我的团">
+				<mu-icon slot="right" value="keyboard_arrow_right" />
+				<mu-icon slot="left" value="drafts" />
 			</mu-list-item>
 		</mu-list>
-		<!--
-					<mobile-tear-sheet>
-						
-					</mobile-tear-sheet>-->
+		<mu-raised-button label="退出当前帐号" fullWidth/>
 	</div>
 </template>
 <script>
-//import mobileTearSheet from '../../../components/mobileTearSheet'
 export default {
 	components: {
-		//'mobile-tear-sheet': mobileTearSheet
 	},
 	name: 'app',
 	data: function () {
@@ -76,14 +61,16 @@ export default {
 <style type='text/css' >
 .person {
 	width: 100%;
-	height: 16rem;
+	height: 19rem;
 	background-color: #7e57c2;
 }
 
 .is-selected {
 	background-color: #7e57c2;
 }
-
+.mu-list{
+	padding: 4px 0;
+}
 .person .login,
 .person .register {
 	color: #fff;
@@ -91,8 +78,10 @@ export default {
 	padding: 6px;
 	float: left;
 }
-
 .person .login {
 	float: right;
+}
+.mu-raised-button{
+	height: 40px;
 }
 </style>

@@ -1,20 +1,16 @@
 <template>
     <div>
-        <!--<ul>
-                        <li v-for="item in list">
-                            <img v-lazy="item">
-                        </li>
-                    </ul>-->
         <mu-raised-button label="toggle drawer" @click="toggle()" />
         <mu-raised-button label="undocked drawer" @click="toggle(true)" />
-        <mu-drawer :open="open" :docked="docked" @close="toggle()">
+        <mu-drawer :open="open" :docked="docked" @close="toggle()" width="130">
             <mu-list @itemClick="docked ? '' : toggle()">
                 <mu-list-item title="Menu Item 1" />
-                <mu-list-item title="Menu Item 2" />
-                <mu-list-item title="Menu Item 3" />
+                <mu-list-item title="Menu Item 2"/>
+                <mu-list-item title="Menu Item 3"/>
                 <mu-list-item v-if="docked" @click.native="open = false" title="Close" />
             </mu-list>
         </mu-drawer>
+        <div v-for="list in 10">{{list}}</div>
     </div>
 </template>
 
@@ -23,7 +19,7 @@ export default {
     data() {
         return {
             //list:['https://github.com/chenjunCodingGit/MyApp/blob/master/src/assets/images/img_1.jpg?raw=true','https://github.com/chenjunCodingGit/MyApp/blob/master/src/assets/images/img_1.jpg?raw=true','https://github.com/chenjunCodingGit/MyApp/blob/master/src/assets/images/img_1.jpg?raw=true']
-            open: false,
+            open: true,
             docked: true
         }
     },

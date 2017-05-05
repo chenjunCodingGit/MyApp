@@ -9,10 +9,16 @@
         <!-- tab-container -->
         <mt-tab-container v-model="selected">
             <mt-tab-container-item id="1">
-                
-                <div v-for="n in 30" :key = 'n.id'
-                         :title="'content ' + n" >
-                    sdd
+                <div class="gridlist-demo-container">
+                    <mu-grid-list class="gridlist-demo">
+                        <mu-sub-header>图片展示</mu-sub-header>
+                        <mu-grid-tile v-for="tile, index in list" :key="index">
+                        <img :src="tile.image"/>
+                        <span slot="title">{{tile.title}}</span>
+                        <span slot="subTitle">by <b>{{tile.author}}</b></span>
+                        <mu-icon-button icon="star_border" slot="action"/>
+                        </mu-grid-tile>
+                    </mu-grid-list>
                 </div>
             </mt-tab-container-item>
             <mt-tab-container-item id="2">
@@ -37,13 +43,59 @@ export default {
     data: function () {
         return {
             selected: '1',
-            value:5
+            value:5,
+            list: [{
+                image: './static/home/one.jpg',
+                title: 'Breakfast',
+                author: 'Myron'
+            }, {
+                image: './static/home/one.jpg',
+                title: 'Burger',
+                author: 'Linyu'
+            }, {
+                image: './static/home/one.jpg',
+                title: 'Camera',
+                author: 'ruolin'
+            }, {
+                image: './static/home/one.jpg',
+                title: 'Hats',
+                author: 'kakali'
+            }, {
+                image: './static/home/one.jpg',
+                title: 'Honey',
+                author: 'yuyang'
+            }, {
+                image: './static/home/one.jpg',
+                title: 'Morning',
+                author: 'mokayi'
+            }, {
+                image: './static/home/one.jpg',
+                title: 'Vegetables',
+                author: 'NUyyyyyyy'
+            }, {
+                image: './static/home/one.jpg',
+                title: 'water',
+                author: 'TDDyyyyyyy'
+            }]
         }
     }
 }
 </script>
 
-<style type='text/css' >
+<style type='less' >
+.about{
+    .gridlist-demo-container{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    .gridlist-demo{
+        width: 500px;
+        height: 450px;
+        overflow-y: auto;
+    }
+}
 .about .is-selected {
     background-color:#7e57c2;
 }
