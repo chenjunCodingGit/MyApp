@@ -4,7 +4,7 @@
     <mu-paper style="max-width: 420px; ">
       <mu-bottom-nav :value="bottomNav" @change="handleChange">
         <mu-bottom-nav-item value="home" :size="26" title="首页" icon="home" />
-        <mu-bottom-nav-item value="detail" :size="26" title="分类" icon="sort" />
+        <mu-bottom-nav-item value="sort" :size="26" title="分类" icon="sort" />
         <mu-bottom-nav-item value="shopcar" :size="26" title="购物车" icon="shopping cart"   />
         <mu-bottom-nav-item value="about" :size="26" title="我的" icon="person pin"  />
       </mu-bottom-nav>

@@ -6,7 +6,7 @@
                 <img slot="icon" src="../assets/img/home-active.png"> 
                 首页<!--<router-link to="/home">首页</router-link>-->
             </mt-tab-item>
-            <mt-tab-item id="detail">
+            <mt-tab-item id="sort">
                 <img slot="icon" src="../assets/img/fenlei_active.png"> 
                 分类<!--<router-link to="/detail" >分类</router-link>-->
             </mt-tab-item>

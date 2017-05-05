@@ -19,42 +19,36 @@
             </mt-swipe>
         </div>
         
-        <div class="gridlist-demo-container">
+        <div class="gridlist-demo-container"  @click.stop="detail">
             <mu-grid-list class="gridlist-demo">
-                <mu-sub-header>图片展示</mu-sub-header>
+                <mu-sub-header>热门商品</mu-sub-header>
                 <mu-grid-tile v-for="tile, index in list" :key="index">
-                <img :src="list.image"/>
+                <img :src="tile.image"/>
                 <span slot="title">{{tile.title}}</span>
                 <span slot="subTitle">by <b>{{tile.author}}</b></span>
-                <mu-icon-button icon="star_border" slot="action"/>
+                <mu-icon-button  @click.stop='starColor(index,$event)' icon="star_border" slot="action"/>
                 </mu-grid-tile>
             </mu-grid-list>
         </div>
     </div>
-</template>
+</template> 
 <script>
 export default {
-    directives: { //自定义自动聚焦指令
-        focus: {
-            inserted: function (el) {
-                el.focus()
-            }
-        }
-    },
     data() {
         return {
             value: '',
             mydata: [],
+            activeName:new Array(), //保存star颜色状态
             list: [{
                 image: './static/home/one.jpg',
                 title: 'Breakfast',
                 author: 'Myron'
             }, {
-                image: './static/home/one.jpg',
+                image: './static/home/two.jpg',
                 title: 'Burger',
                 author: 'Linyu'
             }, {
-                image: './static/home/one.jpg',
+                image: './static/home/three.jpg',
                 title: 'Camera',
                 author: 'ruolin'
             }, {
@@ -62,11 +56,11 @@ export default {
                 title: 'Hats',
                 author: 'kakali'
             }, {
-                image: './static/home/one.jpg',
+                image: './static/home/two.jpg',
                 title: 'Honey',
                 author: 'yuyang'
             }, {
-                image: './static/home/one.jpg',
+                image: './static/home/three.jpg',
                 title: 'Morning',
                 author: 'mokayi'
             }, {
@@ -74,7 +68,7 @@ export default {
                 title: 'Vegetables',
                 author: 'NUyyyyyyy'
             }, {
-                image: './static/home/one.jpg',
+                image: './static/home/two.jpg',
                 title: 'water',
                 author: 'TDDyyyyyyy'
             }]
@@ -85,8 +79,25 @@ export default {
     },
     methods: {
         goSearch: function () {
-            this.$router.push({path:'/searchInfo'})
-            //window.location = '/#searchInfo' //跳转到搜索页
+            this.$router.push({path:'/searchInfo'}) //跳转到搜索页
+            //window.location = '/#searchInfo' 
+        },
+        starColor(index,e){
+            //this.$router.push({path:'/detail'}) //跳转到搜索页            
+            //console.log(e)
+            if(!this.activeName[index]){ //状态为Null，则添加class为activeName
+                e.toElement.nextElementSibling.className='activeName mu-icon material-icons'
+                this.activeName[index] = 'a'
+            }else{ //否则，则添加class为原状态
+                e.toElement.nextElementSibling.className='mu-icon material-icons'
+                this.activeName[index] = ''
+            }
+            //e.srcElement.className = 'activeName mu-ripple-wrapper'
+            //this.isActive = !this.isActive //点击反转star颜色
+        },
+        detail(){
+            console.log(3)
+            this.$router.push({path:'/detail'}) //跳转到详情页
         }
     },
     created() {
@@ -124,16 +135,24 @@ export default {
         }
     }
     .gridlist-demo-container{
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
+        margin-bottom: 55px;
+        // display: flex;
+        // flex-wrap: wrap;
+        // justify-content: space-around;
+        .activeName{
+            color: #f00;
+        }
+        .mu-sub-header{
+            height: 36px;
+            line-height: 44px;
+        }
     }
 
-    .gridlist-demo{
-        width: 500px;
-        height: 450px;
-        overflow-y: auto;
-    }
+    // .gridlist-demo{
+    //     width: 500px;
+    //     height: 450px;
+    //     overflow-y: auto;
+    // }
 }
 .home-search .page-swipe .mint-swipe {
     margin-top: 44px;

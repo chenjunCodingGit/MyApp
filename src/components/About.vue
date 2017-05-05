@@ -5,7 +5,7 @@
 			<router-link to="/login" class="login">登录</router-link>
 		</div>
 		<mu-list>
-			<mu-list-item title="我的订单" icon="keyboard_arrow_right">
+			<mu-list-item class="list-item-order" title="我的订单" icon="keyboard_arrow_right">
 				<mu-icon slot="left" value="person_outline" />
 				<mu-icon slot="right" value="keyboard_arrow_right" />
 			</mu-list-item>
@@ -19,7 +19,7 @@
 			</mu-bottom-nav>
 		</mu-paper>
 		<mu-list>
-			<mu-list-item title="个人资料">
+			<mu-list-item title="个人资料" class="list-top-one">
 				<mu-icon slot="left" value="person_outline" />
 				<mu-icon slot="right" value="keyboard_arrow_right" />
 			</mu-list-item>
@@ -29,11 +29,11 @@
 			</mu-list-item>
 			<mu-list-item title="帐号设置">
 				<mu-icon slot="right" value="keyboard_arrow_right" />
-				<mu-icon slot="left" value="grade" />
+				<mu-icon slot="left" value="settings" />
 			</mu-list-item>
-			<mu-list-item title="我的团">
+			<mu-list-item title="我的收藏">
 				<mu-icon slot="right" value="keyboard_arrow_right" />
-				<mu-icon slot="left" value="drafts" />
+				<mu-icon slot="left" value="grade" />
 			</mu-list-item>
 		</mu-list>
 		<mu-raised-button label="退出当前帐号" fullWidth/>
@@ -58,10 +58,21 @@ export default {
 }
 </script>
 
-<style type='text/css' >
+<style lang="less">
+.about{
+	.list-item-order{
+		border-top: 1px solid #ececec;
+	}
+	.list-top-one{
+		border-top: 1px solid #ececec;
+	}
+	.mu-item-wrapper{
+		border-bottom: 1px solid #ececec;
+	}
+}
 .person {
 	width: 100%;
-	height: 19rem;
+	height: 18rem;
 	background-color: #7e57c2;
 }
 

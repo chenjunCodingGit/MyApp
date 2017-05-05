@@ -22,7 +22,6 @@ export default {
         focus: {
             inserted: function (el) {
                 el.focus()
-                console.log(3)
             }
         }
     },
@@ -79,8 +78,12 @@ a {
             left: 32px;
         }
         .mu-icon.search-left{
-            font-size:26px;
-            line-height:20px;
+            top: 0px;
+            font-size:22px;
+            height: 44px;
+            line-height:44px;
+            width: 28px;
+            text-align: center;
         }
         input {
             padding-left:25px; 
