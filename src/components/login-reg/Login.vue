@@ -32,7 +32,7 @@ export default {
             inputErrorText: '',           //输入错误后显示的状态
             multiLineInput: '',           //输入错误后显示的状态
             multiLineInputErrorText: '',  //输入错误后显示的状态
-            regUrl: '172.19.60.57'
+            regUrl: '192.168.155.2'
         }
     },
     computed: {
@@ -62,8 +62,7 @@ export default {
                             name: this.logName,
                             password: this.logPsw
                         },
-                        jsonp: 'cb',
-                        credentials: true 
+                        jsonp: 'callback'
                     }).then(function (res) {
                         if (res.ok) {
                             res.json().then((res) => {
@@ -89,7 +88,7 @@ export default {
                         this.logName = ''
                         this.logPsw = ''
                     }, function (error) {
-                        console.log(error)
+                        //console.log(error)
                     })
             }
 
@@ -104,16 +103,16 @@ export default {
             this.$http.jsonp(
                 'http://' + this.regUrl + '/php/session.php',
                 {
-                    params: {
-
-                    },
-                    jsonp: 'cb',
-                    credentials: true 
+                    jsonp: 'callback'
                 }
             ).then((res) => {
                 if (res.ok) {
                     res.json().then((res) => {
-                        console.log(res)
+                        if (res.status == this.logName) {
+                            this.toast = true                 //显示toast提示
+                            this.isEmptyInput = false         //emptyInput置为初始class
+                            this.message = '登录成功'
+                        }
                     }, (err) => {
                         console.log(err)
                     })

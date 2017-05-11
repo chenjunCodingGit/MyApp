@@ -112,7 +112,6 @@ export default {
             if (this.toastTimer) clearTimeout(this.toastTimer)
         },
         detail() {
-            console.log(3)
             this.$router.push({ path: '/detail' }) //跳转到详情页
         }
     },
