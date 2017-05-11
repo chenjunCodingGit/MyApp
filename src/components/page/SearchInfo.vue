@@ -2,7 +2,7 @@
     <div>
         <div class="search-info" @keyup="get()" @click="get()">
             <div class="mysearch">
-                <mu-icon @click='back' class="search-left" value="keyboard_arrow_left" color="#fff"/>
+                <mu-icon @click='back' class="search-left" value="keyboard_arrow_left" color="#fff" />
                 <mu-icon class="search-icon" value="search" color="#7e57c2" />
                 <input v-model="value" type="search" placeholder='搜索' v-focus/>
                 <span @click='searchCancel'>取消</span>
@@ -47,11 +47,11 @@ export default {
                 console.log(err)
             })
         },
-        searchCancel(){ //点击取消
+        searchCancel() { //点击取消
             this.value = ''
         },
-        back(){ //点击返回home
-            this.$router.push({path:'/home'})
+        back() { //点击返回home
+            this.$router.push({ path: '/home' })
         }
     },
 }
@@ -69,7 +69,7 @@ a {
         height: 44px;
         top: 0px;
         z-index: 99;
-        .mu-icon{
+        .mu-icon {
             position: absolute;
             top: 12px;
             font-size: 20px;
@@ -77,16 +77,16 @@ a {
         .mu-icon.search-icon {
             left: 32px;
         }
-        .mu-icon.search-left{
+        .mu-icon.search-left {
             top: 0px;
-            font-size:22px;
+            font-size: 22px;
             height: 44px;
-            line-height:44px;
+            line-height: 44px;
             width: 28px;
             text-align: center;
         }
         input {
-            padding-left:25px; 
+            padding-left: 25px;
             width: 80%;
             height: 28px;
             margin-left: 30px;
@@ -95,13 +95,13 @@ a {
             border-radius: 3px;
             outline: none;
         }
-        span{
-            display:inline-block;
-            color:#fff;
-            height:44px;
-            line-height:44px;
-            width:36px;
-            text-align:center;
+        span {
+            display: inline-block;
+            color: #fff;
+            height: 44px;
+            line-height: 44px;
+            width: 36px;
+            text-align: center;
         }
     }
 }

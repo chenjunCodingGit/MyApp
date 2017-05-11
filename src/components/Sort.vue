@@ -32,11 +32,8 @@
                     </mu-grid-list>
                 </div>
             </mt-tab-container-item>
-            <mt-tab-container-item id="3">
-                <mt-cell v-for="n in 0" :key='n.id' :title="'content ' + n" />
-                <div>
-                    sdddsddsddddddddddd
-                </div>
+            <mt-tab-container-item id="3" class="sort3">
+                ddddddd
             </mt-tab-container-item>
         </mt-tab-container>
     </div>
@@ -47,6 +44,8 @@ export default {
         return {
             selected: '1',
             value: 5,
+            snackbar: true,
+            toast: true,
             list: [{
                 image: './static/home/one.jpg',
                 title: 'Breakfast',
@@ -83,6 +82,9 @@ export default {
                 author: 'TDDyyyyyyy'
             }]
         }
+    },
+    methods: {
+        
     }
 }
 </script>
@@ -114,6 +116,9 @@ export default {
             height: 566px;
             overflow-y: auto;
         }
+    }
+    .sort3{
+        
     }
 }
 

@@ -1,19 +1,44 @@
 <template>
     <div class="shopcar">
-        <!--<mu-raised-button label="toggle drawer" @click="toggle()" />
-                <mu-raised-button label="undocked drawer" @click="toggle(true)" />
-                <mu-drawer :open="open" :docked="docked" @close="toggle()" width="130">
-                    <mu-list @itemClick="docked ? '' : toggle()">
-                        <mu-list-item title="Menu Item 1" />
-                        <mu-list-item title="Menu Item 2"/>
-                        <mu-list-item title="Menu Item 3"/>
-                        <mu-list-item v-if="docked" @click.native="open = false" title="Close" />
-                    </mu-list>
-                </mu-drawer>
-                <div v-for="list in 10">{{list}}</div>-->
         <mu-appbar title="购物车">
-            <mu-flat-button label="清空购物车" slot="right" />
+            <mu-flat-button @click='clearShopCar' label="清空购物车" slot="right" />
         </mu-appbar>
+    
+        <div v-for="title,index in list" :key="index">
+            <div class="select-shop">
+                <mu-checkbox class="demo-checkbox" @change='selectCheck(index)' :selected='title.selected' />
+    
+                <div class="shop-img">
+                    <img :src="title.src" />
+                </div>
+                <div class="shop-left">
+                    <div class="shop-title">
+                        <div class="shop-title-top">{{title.tileTop}}</div>
+                        <div class="shop-title-standard">{{title.tileStandard}}</div>
+                    </div>
+                    <div class="shop-title-bottom">
+                        <div class="title-bottom-money">
+                            <span>¥</span>
+                            <span>{{title.bottomMoney}}</span>
+                        </div>
+                        <div class="title-bottom-btn">
+                            <span @click='decrease(index)'>-</span>
+                            <span>{{title.shopNum}}</span>
+                            <span @click='add(index)'>+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="submit">
+            <div class="submit-title">商品总计：</div>
+            <div class="submit-total">
+                <span>¥</span>
+                <span>{{submitTitle}}</span>
+            </div>
+            <mu-flat-button @click='submit' label="去结算" slot="right" primary/>
+        </div>
     </div>
 </template>
 
@@ -21,15 +46,75 @@
 export default {
     data() {
         return {
-            //list:['https://github.com/chenjunCodingGit/MyApp/blob/master/src/assets/images/img_1.jpg?raw=true','https://github.com/chenjunCodingGit/MyApp/blob/master/src/assets/images/img_1.jpg?raw=true','https://github.com/chenjunCodingGit/MyApp/blob/master/src/assets/images/img_1.jpg?raw=true']
-            open: true,
-            docked: true
+            submitTitle: 0, //商品总计
+            list: [{
+                id: 1,
+                src:'./static/home/two.jpg',
+                tileTop: '新西兰原装进口奶粉，精选上等优质原料。',
+                tileStandard: '100g',  //商品规格
+                bottomMoney: 100,      //商品单价
+                shopNum: 0,            //商品数量
+                selected: false         //selectbox选择状态
+            }, {
+                id: 2,
+                src:'./static/home/two.jpg',
+                tileTop: '新西兰原装进口奶粉，精选上等优质原料。',
+                tileStandard: '200g',
+                bottomMoney: 200,
+                shopNum: 0,
+                selected: false
+            }, {
+                id: 3,
+                src:'./static/home/two.jpg',
+                tileTop: '新西兰原装进口奶粉，精选上等优质原料。',
+                tileStandard: '300g',
+                bottomMoney: 300,
+                shopNum: 0,
+                selected: false
+            }]
         }
     },
     methods: {
-        toggle(flag) {
-            this.open = !this.open
-            this.docked = !flag
+        submit() { //提交结算
+            //console.log(3)
+        },
+        clearShopCar() { //清空购物车
+            this.list = ''
+            this.submitTitle = 0
+        },
+        add(index) {     //增加商品数量
+            if (this.list[index].shopNum >= 0) {
+                this.list[index].shopNum++ //数量++
+                if (this.list[index].selected) {
+                    this.submitTitle += this.list[index].bottomMoney //商品总价++
+                }
+
+            }
+        },
+        decrease(index) {//减少商品数量
+            //console.log(this.$parent.$children[1])
+            //this.$parent.$children[1].$children[index + 1].$el.children[0].checked = true
+            if (this.list[index].shopNum > 0) {
+                this.list[index].shopNum-- //数量--
+                if (this.list[index].selected) { //checkbox被选中
+                    this.submitTitle -= this.list[index].bottomMoney //商品总价--
+                }
+                if (this.list[index].shopNum <= 0) { //商品选择减少到0时
+                    this.$parent.$children[1].$children[index + 1].$el.children[0].checked = false //点击当前index的checkbox为false
+                    this.list[index].selected = false //checkbox的false状态保持一致
+                    //console.log(this.list[index].selected)
+                }
+
+            }
+        },
+        selectCheck(index) { //勾选checkbox某个商品
+            this.list[index].selected = !this.list[index].selected //点击反转checkbox状态
+            if (this.list[index].selected) { //当前checkbox状态为true
+                this.submitTitle += this.list[index].bottomMoney * this.list[index].shopNum //商品总价+被选择商品总价
+            }
+            if (!this.list[index].selected) { //当前checkbox状态为false
+                this.submitTitle -= this.list[index].bottomMoney * this.list[index].shopNum //商品总价-被选择商品总价
+            }
         }
     }
 }
@@ -41,19 +126,139 @@ export default {
         padding: 0px;
         height: 50px;
         line-height: 50px;
-        .right span{
+        .right span {
             font-family: "Microsoft YaHei";
-            font-size: 13px;
-            // letter-spacing: 1px;
+            font-size: 13px; // letter-spacing: 1px;
         }
         .mu-appbar-title span {
             font-size: 16px;
             letter-spacing: 1px;
-            margin-left:157px;
+            margin-left: 157px;
         }
         .mu-flat-button-label {
             padding-right: 7px;
             padding-left: 7px;
+        }
+    }
+    .select-shop {
+        width: 100%;
+        height: 120px;
+        border-bottom: 1px solid #ececec;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        .mu-checkbox {
+            margin-left: 10px;
+        }
+        .shop-img {
+            flex: 1.5;
+            background-color: #f00;
+            height: 90px;
+            margin-left: 10px;
+            img{
+                width: 100%;
+                height: 100%;
+            }
+        }
+        .shop-left {
+            flex: 4;
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+            height: 90px;
+            .shop-title {
+                height: 80px;
+                .shop-title-standard {
+                    color: #aaa;
+                }
+            }
+            .shop-title-bottom {
+                display: flex;
+                height: 30px;
+                flex-direction: row;
+                span {
+                    display: inline-block;
+                }
+                .title-bottom-money {
+                    flex: 1;
+                    height: 30px;
+                    color: #7e57c2;
+                }
+                .title-bottom-btn {
+                    flex: 1;
+                    height: 30px;
+                    margin-right: 30px;
+                    border: 1px solid #ececec;
+                    display: flex;
+                    align-items: center;
+                    span:nth-child(1) {
+                        width: 30px;
+                        height: 30px;
+                        line-height: 30px;
+                        text-align: center;
+                        border-right: 1px solid #ececec;
+                        font-size: 22px;
+                    }
+                    span:nth-child(1):hover {
+                        color: #fff;
+                        background-color: #7e57c2;
+                    }
+                    span:nth-child(2) {
+                        flex: 1;
+                        text-align: center;
+                    }
+                    span:nth-child(3) {
+                        width: 30px;
+                        height: 30px;
+                        line-height: 30px;
+                        text-align: center;
+                        border-left: 1px solid #ececec;
+                    }
+                    span:nth-child(3):hover {
+                        color: #fff;
+                        background-color: #7e57c2;
+                    }
+                }
+            }
+        }
+    }
+
+
+    .submit {
+        position: absolute;
+        bottom: 60px;
+        height: 50px;
+        line-height: 50px;
+        width: 100%;
+        border-top: 1px solid #ececec;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        .submit-title {
+            text-align: right;
+            flex: 1;
+            font-size: 18px;
+        }
+        .submit-total {
+            flex: 1;
+            margin-left: 0px;
+            color: #7e57c2;
+            font-size: 18px;
+        }
+        .mu-flat-button {
+            flex: 1;
+            height: 50px;
+            line-height: 50px;
+            border-radius: 0px;
+            letter-spacing: 1px;
+            margin-right: 2px;
+        }
+        .mu-flat-button-primary {
+            background-color: #7e57c2;
+            color: #fff;
+            margin-right: 2px;
         }
     }
 }

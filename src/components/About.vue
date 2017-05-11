@@ -23,7 +23,7 @@
 				<mu-icon slot="left" value="person_outline" />
 				<mu-icon slot="right" value="keyboard_arrow_right" />
 			</mu-list-item>
-			<mu-list-item title="收货地址">
+			<mu-list-item title="收货地址" @click='address'>
 				<mu-icon slot="right" value="keyboard_arrow_right" />
 				<mu-icon slot="left" value="location_on" />
 			</mu-list-item>
@@ -36,7 +36,7 @@
 				<mu-icon slot="left" value="grade" />
 			</mu-list-item>
 		</mu-list>
-		<mu-raised-button label="退出当前帐号" fullWidth/>
+		<mu-raised-button label="退出当前帐号" fullWidth @click='toast' />
 	</div>
 </template>
 <script>
@@ -53,23 +53,30 @@ export default {
 		handleChange(val) {
 			this.bottomNav = val
 			//console.log(val)
+		},
+		toast() {
+			///this.$router.push({path:'/toast'}) //跳转到搜索页            
+		},
+		address(){
+			this.$router.push({path:'/address'})
 		}
 	}
 }
 </script>
 
 <style lang="less">
-.about{
-	.list-item-order{
+.about {
+	.list-item-order {
 		border-top: 1px solid #ececec;
 	}
-	.list-top-one{
+	.list-top-one {
 		border-top: 1px solid #ececec;
 	}
-	.mu-item-wrapper{
+	.mu-item-wrapper {
 		border-bottom: 1px solid #ececec;
 	}
 }
+
 .person {
 	width: 100%;
 	height: 18rem;
@@ -79,9 +86,11 @@ export default {
 .is-selected {
 	background-color: #7e57c2;
 }
-.mu-list{
+
+.mu-list {
 	padding: 4px 0;
 }
+
 .person .login,
 .person .register {
 	color: #fff;
@@ -89,10 +98,12 @@ export default {
 	padding: 6px;
 	float: left;
 }
+
 .person .login {
 	float: right;
 }
-.mu-raised-button{
+
+.mu-raised-button {
 	height: 40px;
 }
 </style>

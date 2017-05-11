@@ -12,6 +12,7 @@ import register from '../components/login-reg/Register.vue'
 
 import searchInfo from '../components/page/SearchInfo.vue' //点击搜索后，跳转到具体搜索页
 import detail from '../components/page/Detail.vue' //点击搜索后，跳转到具体搜索页
+import address from '../components/page/Address.vue' //地址选择页
 
 Vue.use(VueRouter)
 
@@ -32,6 +33,7 @@ const routes = [
     { path: '/login', component: login },
     { path: '/register', component: register },
     { path: '/detail', component: detail },
+    { path: '/address', component: address },
 ]
 
 export default new VueRouter({
