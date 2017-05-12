@@ -1,10 +1,10 @@
 <template>
-    <div class="mylogin">
+    <div class="myaccount">
         <TopBar title="登录"></TopBar>
-        <mu-text-field v-model='logName' class="login-name" hintText="用户名" type="email" icon="account_circle" />
-        <mu-text-field v-model='logPsw' hintText="密码(不能超过10位)" :errorText="inputErrorText" @textOverflow="handleInputOverflow" :maxLength="10" type="password" icon="https" />
+        <mu-text-field v-model='logName' class="login-name" hintText="添加邮箱" type="email" icon="email" />
+        <mu-text-field v-model='logPsw' hintText="添加联系电话" :errorText="inputErrorText" @textOverflow="handleInputOverflow" :maxLength="11" icon="phone" />
         <br/>
-        <mu-raised-button @click='loginBtn' label="登录" class="demo-raised-button" primary/>
+        <mu-raised-button @click='loginBtn' label="添加" class="demo-raised-button" primary/>
     
         <mu-toast v-if="toast" :message="message" :class="{emptyInput:isEmptyInput}" @close="hideToast" />
     </div>
@@ -13,14 +13,34 @@
 import TopBar from '../public/TopBar.vue'
 export default {
     created() {
-        //const _this = this;
-
+        this.$http.jsonp(
+            'http://' + this.regUrl + '/php/session.php',
+            {
+                jsonp: 'callback'
+            }
+        ).then((res) => {
+            if (res.ok) {
+                res.json().then((res) => {
+                    console.log(res.status)
+                    if (res.status) {
+                        this.username = res.status
+                    }
+                }, (err) => {
+                    console.log(err)
+                })
+            } else {
+                console.log(9)
+            }
+        }, (error) => {
+            //console.log(error)
+        })
     },
     components: {
         TopBar
     },
     data() {
         return {
+            username:'',         //用户name
             logName: '',         //登录name  
             logPsw: '',          //登录password
             toast: false,        //是否显示toast
@@ -43,51 +63,15 @@ export default {
             this.isOverflow = isOverflow         //密码超过规定范围是置为true
         },
         loginBtn() {
-
             if (this.logName == '' || this.logPsw == '') {
                 this.toast = true                //显示toast提示
-                this.message = '用户名或密码为空'
+                this.message = '邮箱或电话为空'
 
                 this.isEmptyInput = true         //添加密码或name为空时class
-            } else if (this.isOverflow) {
+            } else if (this.isOverflow){
                 this.toast = true                //显示toast提示
                 this.message = '密码超过规定范围'
                 this.logPsw = ''
-            } else {
-                this.$http.jsonp(
-                    'http://' + this.regUrl + '/php/login.php', {
-                        params: {
-                            name: this.logName,
-                            password: this.logPsw
-                        },
-                        jsonp: 'callback'
-                    }).then(function (res) {
-                        if (res.ok) {
-                            res.json().then((res) => {
-                                if (res.status == 0) {
-                                    this.toast = true                 //显示toast提示
-                                    this.isEmptyInput = false         //emptyInput置为初始class
-                                    this.message = '登录成功'
-                                    setTimeout(() => {
-
-                                        this.$router.push({ path: '/home' })
-                                    }, 500)
-                                    //this.$router.push({ path: '/home' })
-                                } else {
-                                    this.toast = true
-                                    this.message = '账号或密码错误'
-                                    this.isEmptyInput = true         //添加密码或name为空时class
-                                }
-                            }, (err) => {
-                                console.log(err)
-                            })
-
-                        }
-                        this.logName = ''
-                        this.logPsw = ''
-                    }, function (error) {
-                        //console.log(error)
-                    })
             }
 
             if (this.toastTimer) clearTimeout(this.toastTimer) //toast状态
@@ -101,7 +85,7 @@ export default {
 }   
 </script>
 <style lang="less">
-.mylogin {
+.myaccount {
     .mu-text-field.has-icon.login-name {
         margin-top: 100px;
     }

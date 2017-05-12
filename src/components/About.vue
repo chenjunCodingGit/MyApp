@@ -1,8 +1,16 @@
 <template>
 	<div class='about'>
 		<div class="person">
-			<router-link to="/register" class="register">注册</router-link>
-			<router-link to="/login" class="login">登录</router-link>
+			<router-link v-show="isShowName" to="/register" class="register">注册</router-link>
+			<router-link v-show="isShowName" to="/login" class="login">登录</router-link>
+			<div class="user-header-img" :class="{headerImgBc:isHeader}">
+	
+			</div>
+			<div class="username">
+				<div>
+					{{username}}
+				</div>
+			</div>
 		</div>
 		<mu-list>
 			<mu-list-item class="list-item-order" title="我的订单" icon="keyboard_arrow_right">
@@ -27,7 +35,7 @@
 				<mu-icon slot="right" value="keyboard_arrow_right" />
 				<mu-icon slot="left" value="location_on" />
 			</mu-list-item>
-			<mu-list-item title="帐号设置">
+			<mu-list-item title="帐号设置" @click='setAccount'>
 				<mu-icon slot="right" value="keyboard_arrow_right" />
 				<mu-icon slot="left" value="settings" />
 			</mu-list-item>
@@ -36,17 +44,48 @@
 				<mu-icon slot="left" value="grade" />
 			</mu-list-item>
 		</mu-list>
-		<mu-raised-button label="退出当前帐号" fullWidth @click='toast' />
+		<mu-raised-button v-show="quitBtn" label="退出当前帐号" fullWidth @click='quitAcount' />
 	</div>
 </template>
 <script>
 export default {
 	components: {
 	},
+	created() {
+		this.$http.jsonp(
+			'http://' + this.regUrl + '/php/session.php',
+			{
+				jsonp: 'callback'
+			}
+		).then((res) => {
+			if (res.ok) {
+				res.json().then((res) => {
+					//console.log(res.status)
+					if (res.status) {
+						this.isHeader = true
+						this.username = res.status
+						this.isShowName = false
+						this.quitBtn = true
+					}
+				}, (err) => {
+					console.log(err)
+				})
+			} else {
+				console.log(9)
+			}
+		}, (error) => {
+			//console.log(error)
+		})
+	},
 	name: 'app',
 	data: function () {
 		return {
-			bottomNav: 'recents' //当前选中的nav
+			bottomNav: 'recents', //当前选中的nav,
+			username: '',
+			isShowName: true,
+			quitBtn: false,
+			isHeader: false,
+			regUrl: '172.19.60.57'
 		}
 	},
 	methods: {
@@ -54,11 +93,40 @@ export default {
 			this.bottomNav = val
 			//console.log(val)
 		},
-		toast() {
-			///this.$router.push({path:'/toast'}) //跳转到搜索页            
+		setAccount() {
+			this.$router.push({ path: '/account' }) //跳转到搜索页 
 		},
-		address(){
-			this.$router.push({path:'/address'})
+		quitAcount() { //退出当前账号
+			this.$http.jsonp(
+				'http://' + this.regUrl + '/php/session_destroy.php',
+				{
+					jsonp: 'callback'
+				}
+			).then((res) => {
+				if (res.ok) {
+					res.json().then((res) => {
+						//console.log(res.status)
+						if (res.status == 1) {
+							this.isHeader = false
+							this.username = ''
+							this.isShowName = true
+							this.quitBtn = false
+							this.$router.push({ path: '/about' }) //跳转到搜索页 
+						}
+					}, (err) => {
+						console.log(err)
+					})
+				} else {
+					console.log(9)
+				}
+			}, (error) => {
+				//console.log(error)
+			})
+
+
+		},
+		address() {
+			this.$router.push({ path: '/address' })
 		}
 	}
 }
@@ -75,12 +143,41 @@ export default {
 	.mu-item-wrapper {
 		border-bottom: 1px solid #ececec;
 	}
+	.person {
+		.username,
+		.user-header-img {
+			position: absolute;
+		}
+		.user-header-img {
+			left: 50%;
+			height: 60px;
+			width: 60px;
+			line-height: 60px;
+			border-radius: 50%;
+			margin-left: -30px;
+			top: 5rem; // background-color: #f00;
+		}
+		.user-header-img.headerImgBc {
+			background-color: #f00;
+		}
+		.username {
+			top: 10.5rem;
+			width: 100%;
+			display: flex;
+			height: 26px;
+			font-size: 18px;
+			color: #fff;
+			justify-content: center;
+			align-items: center;
+		}
+	}
 }
 
 .person {
 	width: 100%;
 	height: 18rem;
 	background-color: #7e57c2;
+	position: relative;
 }
 
 .is-selected {
