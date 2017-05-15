@@ -48,6 +48,8 @@
 	</div>
 </template>
 <script>
+import staticList from './data/Global.js'
+
 export default {
 	components: {
 	},
@@ -85,7 +87,7 @@ export default {
 			isShowName: true,
 			quitBtn: false,
 			isHeader: false,
-			regUrl: '192.168.155.1'
+			regUrl: staticList.staticList[0]
 		}
 	},
 	methods: {

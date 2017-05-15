@@ -11,6 +11,8 @@
 </template>
 <script>
 import TopBar from '../public/TopBar.vue'
+import staticList from '../data/Global.js'
+
 export default {
     created() {
         //const _this = this;
@@ -30,7 +32,7 @@ export default {
             inputErrorText: '',           //输入错误后显示的状态
             multiLineInput: '',           //输入错误后显示的状态
             multiLineInputErrorText: '',  //输入错误后显示的状态
-            regUrl: '192.168.155.1'
+            regUrl: staticList.staticList[0]
         }
     },
     computed: {

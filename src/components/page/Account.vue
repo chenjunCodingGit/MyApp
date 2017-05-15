@@ -1,16 +1,18 @@
 <template>
     <div class="myaccount">
-        <TopBar title="添加信息"></TopBar>
-        <mu-text-field v-model='logName' class="login-name" hintText="添加邮箱" type="email" icon="email" />
-        <mu-text-field v-model='logPsw' hintText="添加联系电话" :errorText="inputErrorText" @textOverflow="handleInputOverflow" :maxLength="11" icon="phone" />
+        <TopBar title="信息设置"></TopBar>
+        <mu-text-field v-model='logName' class="login-name" hintText="设置邮箱" type="email" icon="email" />
+        <mu-text-field v-model='logPsw' hintText="设置联系电话" :errorText="inputErrorText" @textOverflow="handleInputOverflow" :maxLength="11" icon="phone" />
         <br/>
-        <mu-raised-button @click='loginBtn' label="添加" class="demo-raised-button" primary/>
+        <mu-raised-button @click='loginBtn' label="设置" class="demo-raised-button" primary/>
     
         <mu-toast v-if="toast" :message="message" :class="{emptyInput:isEmptyInput}" @close="hideToast" />
     </div>
 </template>
 <script>
 import TopBar from '../public/TopBar.vue'
+import staticList from '../data/Global.js'
+
 export default {
     created() {
         this.$http.jsonp(
@@ -50,7 +52,7 @@ export default {
             inputErrorText: '',           //输入错误后显示的状态
             multiLineInput: '',           //输入错误后显示的状态
             multiLineInputErrorText: '',  //输入错误后显示的状态
-            regUrl: '192.168.155.1'
+            regUrl: staticList.staticList[0]
         }
     },
     computed: {
@@ -144,6 +146,7 @@ export default {
     }
 
     .mu-raised-button.mu-raised-button-inverse {
+        letter-spacing: 2px;
         margin-top: 50px;
         width: 180px;
         height: 40px;

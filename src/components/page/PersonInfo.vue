@@ -20,6 +20,8 @@
 </template>
 <script>
 import TopBar from '../public/TopBar.vue'
+import staticList from '../data/Global.js'
+
 export default {
     components: {
         TopBar
@@ -76,7 +78,7 @@ export default {
             username: '',
             usereamil: '',
             usertel: '',
-            regUrl: '192.168.155.1'
+            regUrl: staticList.staticList[0]
         }
     },
     methods: {
@@ -108,8 +110,8 @@ export default {
                 letter-spacing: 24px;
             }
             div {
-                height: 40px;
-                line-height: 40px;
+                height: 30px;
+                line-height: 30px;
                 width: 150px;
                 border-bottom: 1px solid #aaa;
                 padding-left: 5px;
@@ -126,9 +128,10 @@ export default {
         }
     }
     .mu-raised-button.mu-raised-button-inverse {
-        width: 150px;
+        letter-spacing: 1px;
+        width: 190px;
         margin-top: 60px;
-        margin-left: 120px;
+        margin-left: 105px;
     }
 }
 </style>

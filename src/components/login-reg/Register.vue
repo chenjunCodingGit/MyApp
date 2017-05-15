@@ -11,6 +11,7 @@
 </template>
 <script>
 import TopBar from '../public/TopBar.vue'
+import staticList from '../data/Global.js'
 export default {
     components: {
         TopBar
@@ -27,7 +28,7 @@ export default {
             toast: false,       //是否显示toast
             message: '',        //显示toast信息
             isEmptyInput: false, //密码或name为空时class状态
-            regUrl: '192.168.155.1'
+            regUrl: staticList.staticList[0]
 
         }
     },
