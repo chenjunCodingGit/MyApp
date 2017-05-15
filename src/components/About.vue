@@ -27,7 +27,7 @@
 			</mu-bottom-nav>
 		</mu-paper>
 		<mu-list>
-			<mu-list-item title="个人资料" class="list-top-one">
+			<mu-list-item title="个人资料" @click='personInfo' class="list-top-one">
 				<mu-icon slot="left" value="person_outline" />
 				<mu-icon slot="right" value="keyboard_arrow_right" />
 			</mu-list-item>
@@ -85,7 +85,7 @@ export default {
 			isShowName: true,
 			quitBtn: false,
 			isHeader: false,
-			regUrl: '172.19.60.57'
+			regUrl: '192.168.155.1'
 		}
 	},
 	methods: {
@@ -111,7 +111,7 @@ export default {
 							this.username = ''
 							this.isShowName = true
 							this.quitBtn = false
-							this.$router.push({ path: '/about' }) //跳转到搜索页 
+							this.$router.push({ path: '/about' }) //跳转到搜索页
 						}
 					}, (err) => {
 						console.log(err)
@@ -127,6 +127,9 @@ export default {
 		},
 		address() {
 			this.$router.push({ path: '/address' })
+		},
+		personInfo(){
+			this.$router.push({ path: '/personInfo' })
 		}
 	}
 }

@@ -13,7 +13,8 @@ import register from '../components/login-reg/Register.vue'
 import searchInfo from '../components/page/SearchInfo.vue' //点击搜索后，跳转到具体搜索页
 import detail from '../components/page/Detail.vue' //点击搜索后，跳转到具体搜索页
 import address from '../components/page/Address.vue' //地址选择页
-import account from '../components/page/Account.vue' //地址选择页
+import account from '../components/page/Account.vue' //个人账号设置
+import personInfo from '../components/page/PersonInfo.vue' //个人资料设置
 
 Vue.use(VueRouter)
 
@@ -36,6 +37,7 @@ const routes = [
     { path: '/detail', component: detail },
     { path: '/address', component: address },
     { path: '/account', component: account },
+    { path: '/personInfo', component: personInfo },
 ]
 
 export default new VueRouter({

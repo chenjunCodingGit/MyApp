@@ -27,7 +27,7 @@ export default {
             toast: false,       //是否显示toast
             message: '',        //显示toast信息
             isEmptyInput: false, //密码或name为空时class状态
-            regUrl: '172.19.60.57'
+            regUrl: '192.168.155.1'
 
         }
     },
@@ -91,12 +91,13 @@ export default {
             if (this.toastTimer) clearTimeout(this.toastTimer)
         },
         checkName() {
-            this.$http.get(
+            this.$http.jsonp(
                 'http://' + this.regUrl + '/php/checkRegName.php',
                 {
                     params: {
                         name: this.regName
-                    }
+                    },
+                    jsonp:'callback'
                 }
             ).then(function (res) {
                 if (res.ok) {

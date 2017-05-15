@@ -30,7 +30,7 @@ export default {
             inputErrorText: '',           //输入错误后显示的状态
             multiLineInput: '',           //输入错误后显示的状态
             multiLineInputErrorText: '',  //输入错误后显示的状态
-            regUrl: '172.19.60.57'
+            regUrl: '192.168.155.1'
         }
     },
     computed: {

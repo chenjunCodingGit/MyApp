@@ -1,6 +1,6 @@
 <template>
     <div class="myaccount">
-        <TopBar title="登录"></TopBar>
+        <TopBar title="添加信息"></TopBar>
         <mu-text-field v-model='logName' class="login-name" hintText="添加邮箱" type="email" icon="email" />
         <mu-text-field v-model='logPsw' hintText="添加联系电话" :errorText="inputErrorText" @textOverflow="handleInputOverflow" :maxLength="11" icon="phone" />
         <br/>
@@ -21,7 +21,7 @@ export default {
         ).then((res) => {
             if (res.ok) {
                 res.json().then((res) => {
-                    console.log(res.status)
+                    // console.log(res.status)
                     if (res.status) {
                         this.username = res.status
                     }
@@ -40,7 +40,7 @@ export default {
     },
     data() {
         return {
-            username:'',         //用户name
+            username: '',         //用户name
             logName: '',         //登录name  
             logPsw: '',          //登录password
             toast: false,        //是否显示toast
@@ -50,7 +50,7 @@ export default {
             inputErrorText: '',           //输入错误后显示的状态
             multiLineInput: '',           //输入错误后显示的状态
             multiLineInputErrorText: '',  //输入错误后显示的状态
-            regUrl: '172.19.60.57'
+            regUrl: '192.168.155.1'
         }
     },
     computed: {
@@ -63,16 +63,60 @@ export default {
             this.isOverflow = isOverflow         //密码超过规定范围是置为true
         },
         loginBtn() {
+            // console.log(this.username+'--------')
+
             if (this.logName == '' || this.logPsw == '') {
                 this.toast = true                //显示toast提示
                 this.message = '邮箱或电话为空'
 
                 this.isEmptyInput = true         //添加密码或name为空时class
-            } else if (this.isOverflow){
+            } else if (this.isOverflow) {
                 this.toast = true                //显示toast提示
                 this.message = '密码超过规定范围'
                 this.logPsw = ''
+            } else if (this.username) {
+                this.$http.jsonp(
+                    'http://' + this.regUrl + '/php/addAccountInfo.php',
+                    {
+                        params: {
+                            name: this.username,
+                            email: this.logName,
+                            tel: this.logPsw
+                        },
+                        jsonp: 'callback'
+                    }
+                ).then((res) => {
+                    if (res.ok) {
+                        res.json().then((res) => {
+                            // console.log(res.status)
+                            if (res.status) {
+                                this.toast = true                    //显示toast提示
+                                this.message = '添加用户信息成功'
+
+                                this.isEmptyInput = true            //添加密码或name为空时class
+                                setTimeout(() => {
+                                    this.$router.push({ path: '/home' }) //跳转到搜索页
+                                }, 800)
+
+                            }
+                        }, (err) => {
+                            console.log(err)
+                        })
+                    } else {
+                        console.log(9)
+                    }
+                }, (error) => {
+                    console.log(error)
+                })
+            } if (!this.username) {
+                this.toast = true                    //显示toast提示
+                this.message = '请先登陆'
+                this.isEmptyInput = false
             }
+            else {
+                // console.log(333)
+            }
+
 
             if (this.toastTimer) clearTimeout(this.toastTimer) //toast状态
             this.toastTimer = setTimeout(() => { this.toast = false }, 500)
@@ -86,6 +130,11 @@ export default {
 </script>
 <style lang="less">
 .myaccount {
+    .topbar {
+        .top-title {
+            margin-left: 122px;
+        }
+    }
     .mu-text-field.has-icon.login-name {
         margin-top: 100px;
     }
