@@ -53,79 +53,150 @@ export default {
             }).then((res) => {
                 if (res.ok) {
                     res.json().then((res) => {
-                        this.username = res.status
+                        if (res.status) {
+                            this.username = res.status
+
+                            this.$http.jsonp( //selectFavorite
+                                'http://' + this.regUrl + '/php/shopcar/selectshopcar.php', {
+                                    params: {
+                                        name: this.username
+                                    },
+                                    jsonp: 'callback'
+                                }).then(function (res) {
+                                    if (res.ok) {
+                                        res.json().then((res) => {
+                                            // console.log(res)
+                                            res.forEach(function (element, index) {
+                                                // console.log(element.id)
+                                                this.list.push(element)
+
+                                                let myobj = new Object()
+                                                myobj.id = ""
+                                                myobj.shopnum = ''
+
+                                                this.ids.push(myobj)
+                                                this.ids[index].id = element.id
+                                            }, this);
+
+                                        }, (err) => {
+                                            console.log(err)
+                                        })
+
+                                    }
+                                }, function (error) {
+                                    console.log(error)
+                                })
+                        }
+
                     })
                 }
             }, (error) => {
                 console.log(error)
             })
+
+        // console.log(this.ids)
+    },
+    computed: {
+        // return this.list[index]
     },
     data() {
         return {
             username: '',
             submitTitle: 0, //商品总计
-            list: [{
-                id: 1,
-                image: './static/home/two.jpg',
-                title: '新西兰原装进口奶粉，精选上等优质原料。',
-                scale: '100g',  //商品规格
-                price: 100,      //商品单价
-                shopnum: 0,            //商品数量
-                selected: false         //selectbox选择状态
-            }, {
-                id: 2,
-                image: './static/home/two.jpg',
-                title: '新西兰原装进口奶粉，精选上等优质原料。',
-                scale: '200g',
-                price: 200,
-                shopnum: 0,
-                selected: false
-            }, {
-                id: 3,
-                image: './static/home/two.jpg',
-                title: '新西兰原装进口奶粉，精选上等优质原料。',
-                scale: '300g',
-                price: 300,
-                shopnum: 0,
-                selected: false
-            }],
+            list: [],
+            ids: [],
             regUrl: staticList.staticList[0]
+            // list: [{
+            //     id: 1,
+            //     image: './static/home/two.jpg',
+            //     title: '新西兰原装进口奶粉，精选上等优质原料。',
+            //     scale: '100g',  //商品规格
+            //     price: 100,      //商品单价
+            //     shopnum: 0,            //商品数量
+            //     selected: 0         //selectbox选择状态
+            // }],
         }
     },
     methods: {
         submit() { //提交结算
-            //console.log(3)
+            this.$http.jsonp(
+                'http://' + this.regUrl + '/php/shopcar/updateShopcar.php', {
+                    params: {
+                        ids: this.ids
+                    },
+                    jsonp: 'callback'
+                }).then((res) => {
+                    if(res.ok){
+                        res.json().then((res)=>{
+                            console.log(res.status)
+                            if(res.status){
+                                console.log('ok')
+                            }else{
+                                console.log('no')
+                            }
+                        },(err)=>{
+
+                        })
+                    }
+                })
         },
         clearShopCar() { //清空购物车
             this.list = ''
             this.submitTitle = 0
+            this.$http.jsonp(
+                'http://' + this.regUrl + '/php/shopcar/clearShopcar.php', {
+                    params: {
+                        name: this.username
+                    },
+                    jsonp: 'callback'
+                }).then((res) => {
+                    if (res.ok) {
+                        res.json().then((res) => {
+                            // console.log(3)
+                        }, (err) => {
+                            console.log(err)
+                        })
+                    }
+                })
         },
         add(index) {     //增加商品数量
+            this.list[index].selected = Number(this.list[index].selected)  //将字符串string类型转化为num
+            this.list[index].price = Number(this.list[index].price)        //将字符串string类型转化为num
+            this.list[index].shopnum = Number(this.list[index].shopnum)    //将字符串string类型转化为num
+            // console.log(typeof(this.list[index].selected))
             if (this.list[index].shopnum >= 0) {
                 this.list[index].shopnum++ //数量++
+                this.ids[index].shopnum = this.list[index].shopnum     //将该商品数量更新到数组对象shopnum中
                 if (this.list[index].selected) {
-                    this.submitTitle += this.list[index].price //商品总价++
+                    this.submitTitle += Number(this.list[index].price) //商品总价++
                 }
 
             }
         },
         decrease(index) {//减少商品数量
+            this.list[index].selected = Number(this.list[index].selected) //将字符串string类型转化为num
+            this.list[index].price = Number(this.list[index].price)       //将字符串string类型转化为num
+            this.list[index].shopnum = Number(this.list[index].shopnum)   //将字符串string类型转化为num
+
             //console.log(this.$parent.$children[1])
             //this.$parent.$children[1].$children[index + 1].$el.children[0].checked = true
             if (this.list[index].shopnum > 0) {
                 this.list[index].shopnum-- //数量--
-                if (this.list[index].selected) { //checkbox被选中
-                    this.submitTitle -= this.list[index].price //商品总价--
+                this.ids[index].shopnum = this.list[index].shopnum   //将该商品数量更新到数组对象shopnum中
+                if (this.list[index].selected) {                     //checkbox被选中
+                    this.submitTitle -= this.list[index].price       //商品总价--
                 }
                 if (this.list[index].shopnum <= 0) { //商品选择减少到0时
-                    this.$parent.$children[1].$children[index + 1].$el.children[0].checked = false //点击当前index的checkbox为false
-                    this.list[index].selected = false //checkbox的false状态保持一致
-                    //console.log(this.list[index].selected)
+                    // console.log(this.$parent.$children[1].$children[index+2])
+                    // this.$parent.$children[1].$children[index + 2].$el.children[0].checked = false //点击当前index的checkbox为false
+                    // this.list[index].selected = false //checkbox的false状态保持一致
                 }
 
             }
         },
         selectCheck(index) { //勾选checkbox某个商品
+            this.list[index].selected = Number(this.list[index].selected)
+
             this.list[index].selected = !this.list[index].selected //点击反转checkbox状态
             if (this.list[index].selected) { //当前checkbox状态为true
                 this.submitTitle += this.list[index].price * this.list[index].shopnum //商品总价+被选择商品总价
