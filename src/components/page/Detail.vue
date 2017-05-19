@@ -136,7 +136,7 @@ export default {
         .mu-raised-button.mu-raised-button-inverse {
             margin-top: 0px;
             top: -9px;
-            margin-left: 80px;
+            margin-left: 120px;
         }
     }
     .mu-toast {

@@ -39,7 +39,7 @@
 				<mu-icon slot="right" value="keyboard_arrow_right" />
 				<mu-icon slot="left" value="settings" />
 			</mu-list-item>
-			<mu-list-item title="我的收藏">
+			<mu-list-item title="我的收藏" @click='setFavorite'>
 				<mu-icon slot="right" value="keyboard_arrow_right" />
 				<mu-icon slot="left" value="grade" />
 			</mu-list-item>
@@ -132,6 +132,9 @@ export default {
 		},
 		personInfo(){
 			this.$router.push({ path: '/personInfo' })
+		},
+		setFavorite(){
+			this.$router.push({ path: '/favorite' })
 		}
 	}
 }

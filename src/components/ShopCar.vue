@@ -9,21 +9,21 @@
                 <mu-checkbox class="demo-checkbox" @change='selectCheck(index)' :selected='title.selected' />
     
                 <div class="shop-img">
-                    <img :src="title.src" />
+                    <img :src="title.image" />
                 </div>
                 <div class="shop-left">
                     <div class="shop-title">
-                        <div class="shop-title-top">{{title.tileTop}}</div>
-                        <div class="shop-title-standard">{{title.tileStandard}}</div>
+                        <div class="shop-title-top">{{title.title}}</div>
+                        <div class="shop-title-standard">{{title.scale}}</div>
                     </div>
                     <div class="shop-title-bottom">
                         <div class="title-bottom-money">
                             <span>¥</span>
-                            <span>{{title.bottomMoney}}</span>
+                            <span>{{title.price}}</span>
                         </div>
                         <div class="title-bottom-btn">
                             <span @click='decrease(index)'>-</span>
-                            <span>{{title.shopNum}}</span>
+                            <span>{{title.shopnum}}</span>
                             <span @click='add(index)'>+</span>
                         </div>
                     </div>
@@ -43,35 +43,53 @@
 </template>
 
 <script>
+import staticList from './data/Global.js'
+
 export default {
+    created() {
+        this.$http.jsonp(
+            'http://' + this.regUrl + '/php/session.php', {
+                jsonp: 'callback'
+            }).then((res) => {
+                if (res.ok) {
+                    res.json().then((res) => {
+                        this.username = res.status
+                    })
+                }
+            }, (error) => {
+                console.log(error)
+            })
+    },
     data() {
         return {
+            username: '',
             submitTitle: 0, //商品总计
             list: [{
                 id: 1,
-                src:'./static/home/two.jpg',
-                tileTop: '新西兰原装进口奶粉，精选上等优质原料。',
-                tileStandard: '100g',  //商品规格
-                bottomMoney: 100,      //商品单价
-                shopNum: 0,            //商品数量
+                image: './static/home/two.jpg',
+                title: '新西兰原装进口奶粉，精选上等优质原料。',
+                scale: '100g',  //商品规格
+                price: 100,      //商品单价
+                shopnum: 0,            //商品数量
                 selected: false         //selectbox选择状态
             }, {
                 id: 2,
-                src:'./static/home/two.jpg',
-                tileTop: '新西兰原装进口奶粉，精选上等优质原料。',
-                tileStandard: '200g',
-                bottomMoney: 200,
-                shopNum: 0,
+                image: './static/home/two.jpg',
+                title: '新西兰原装进口奶粉，精选上等优质原料。',
+                scale: '200g',
+                price: 200,
+                shopnum: 0,
                 selected: false
             }, {
                 id: 3,
-                src:'./static/home/two.jpg',
-                tileTop: '新西兰原装进口奶粉，精选上等优质原料。',
-                tileStandard: '300g',
-                bottomMoney: 300,
-                shopNum: 0,
+                image: './static/home/two.jpg',
+                title: '新西兰原装进口奶粉，精选上等优质原料。',
+                scale: '300g',
+                price: 300,
+                shopnum: 0,
                 selected: false
-            }]
+            }],
+            regUrl: staticList.staticList[0]
         }
     },
     methods: {
@@ -83,10 +101,10 @@ export default {
             this.submitTitle = 0
         },
         add(index) {     //增加商品数量
-            if (this.list[index].shopNum >= 0) {
-                this.list[index].shopNum++ //数量++
+            if (this.list[index].shopnum >= 0) {
+                this.list[index].shopnum++ //数量++
                 if (this.list[index].selected) {
-                    this.submitTitle += this.list[index].bottomMoney //商品总价++
+                    this.submitTitle += this.list[index].price //商品总价++
                 }
 
             }
@@ -94,12 +112,12 @@ export default {
         decrease(index) {//减少商品数量
             //console.log(this.$parent.$children[1])
             //this.$parent.$children[1].$children[index + 1].$el.children[0].checked = true
-            if (this.list[index].shopNum > 0) {
-                this.list[index].shopNum-- //数量--
+            if (this.list[index].shopnum > 0) {
+                this.list[index].shopnum-- //数量--
                 if (this.list[index].selected) { //checkbox被选中
-                    this.submitTitle -= this.list[index].bottomMoney //商品总价--
+                    this.submitTitle -= this.list[index].price //商品总价--
                 }
-                if (this.list[index].shopNum <= 0) { //商品选择减少到0时
+                if (this.list[index].shopnum <= 0) { //商品选择减少到0时
                     this.$parent.$children[1].$children[index + 1].$el.children[0].checked = false //点击当前index的checkbox为false
                     this.list[index].selected = false //checkbox的false状态保持一致
                     //console.log(this.list[index].selected)
@@ -110,10 +128,10 @@ export default {
         selectCheck(index) { //勾选checkbox某个商品
             this.list[index].selected = !this.list[index].selected //点击反转checkbox状态
             if (this.list[index].selected) { //当前checkbox状态为true
-                this.submitTitle += this.list[index].bottomMoney * this.list[index].shopNum //商品总价+被选择商品总价
+                this.submitTitle += this.list[index].price * this.list[index].shopnum //商品总价+被选择商品总价
             }
             if (!this.list[index].selected) { //当前checkbox状态为false
-                this.submitTitle -= this.list[index].bottomMoney * this.list[index].shopNum //商品总价-被选择商品总价
+                this.submitTitle -= this.list[index].price * this.list[index].shopnum //商品总价-被选择商品总价
             }
         }
     }
@@ -155,7 +173,7 @@ export default {
             background-color: #f00;
             height: 90px;
             margin-left: 10px;
-            img{
+            img {
                 width: 100%;
                 height: 100%;
             }

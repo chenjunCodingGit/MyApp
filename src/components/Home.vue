@@ -30,50 +30,49 @@
                 </mu-grid-tile>
             </mu-grid-list>
         </div>
-
+    
+        <div class="second-title">新品展示</div>
+        <div class="mydefoot"></div>
         <mu-toast v-if="toast" :message="message" @close="hideToast" />
     </div>
 </template> 
 <script>
+import staticList from './data/Global.js'
+
 export default {
+    created() {
+        this.$http.jsonp(
+            'http://' + this.regUrl + '/php/goods/selectGoods.php', {
+                jsonp: 'callback'
+            }).then(function (res) {
+                // console.log(res)
+                if (res.ok) {
+                    res.json().then((res) => {
+                        res.forEach(function(element) {
+                            this.list.push(element)
+                        }, this);                   
+                    }, (err) => {
+                        console.log(err)
+                    })
+
+                }
+            }, function (error) {
+                console.log(error)
+            })
+    },
     data() {
         return {
+            username: '',
             toast: false, //显示toast状态
-            message:'成功加入收藏', //toast默认信息
+            message: '成功加入收藏', //toast默认信息
             activeName: new Array(), //保存star颜色状态
-            list: [{
-                image: './static/home/one.jpg',
-                title: 'Breakfast',
-                author: 'Myron'
-            }, {
-                image: './static/home/two.jpg',
-                title: 'Burger',
-                author: 'Linyu'
-            }, {
-                image: './static/home/three.jpg',
-                title: 'Camera',
-                author: 'ruolin'
-            }, {
-                image: './static/home/one.jpg',
-                title: 'Hats',
-                author: 'kakali'
-            }, {
-                image: './static/home/two.jpg',
-                title: 'Honey',
-                author: 'yuyang'
-            }, {
-                image: './static/home/three.jpg',
-                title: 'Morning',
-                author: 'mokayi'
-            }, {
-                image: './static/home/one.jpg',
-                title: 'Vegetables',
-                author: 'NUyyyyyyy'
-            }, {
-                image: './static/home/two.jpg',
-                title: 'water',
-                author: 'TDDyyyyyyy'
-            }]
+            list:[],
+            // list: [{
+            //     image: './static/home/one.jpg',
+            //     title: 'Breakfast',
+            //     price: '¥100'
+            // }],
+            regUrl: staticList.staticList[0]
         }
     },
     computed: {
@@ -95,6 +94,50 @@ export default {
                 this.toast = true            //toast显示状态
                 if (this.toastTimer) clearTimeout(this.toastTimer)               //toast
                 this.toastTimer = setTimeout(() => { this.toast = false }, 500)  //toast
+
+                this.$http.jsonp(
+                    'http://' + this.regUrl + '/php/session.php', {
+                        jsonp: 'callback'
+                    }
+                ).then((res) => {
+                    if (res.ok) {
+                        res.json().then((res) => {
+                            if (res.status) {
+                                this.username = res.status
+
+                                this.$http.jsonp(
+                                    'http://' + this.regUrl + '/php/favorite/addFavorite.php', {
+                                        params: {
+                                            name: this.username,
+                                            title: this.list[index].title,
+                                            image: this.list[index].image,
+                                            price: this.list[index].price,
+                                            indexs: index,
+                                            isshow: 'true'
+                                        },
+                                        jsonp: 'callback'
+                                    }).then(function (res) {
+                                        // console.log(res)
+                                        if (res.ok) {
+                                            res.json().then((res) => {
+                                                if (res.status == 0) {
+                                                    //this.$router.push({ path: '/home' })
+                                                } else {
+                                                }
+                                            }, (err) => {
+                                                console.log(err)
+                                            })
+
+                                        }
+                                    }, function (error) {
+                                        console.log(error)
+                                    })
+                            }
+                        })
+                    }
+                })
+
+
             } else { //否则，则添加class为原状态
                 e.toElement.nextElementSibling.className = 'mu-icon material-icons'            //改变star的color
                 this.activeName[index] = ''
@@ -103,6 +146,45 @@ export default {
                 this.toast = true            //toast显示状态
                 if (this.toastTimer) clearTimeout(this.toastTimer)              //toast
                 this.toastTimer = setTimeout(() => { this.toast = false }, 500) //toast
+
+                this.$http.jsonp(
+                    'http://' + this.regUrl + '/php/session.php', {
+                        jsonp: 'callback'
+                    }
+                ).then((res) => {
+                    if (res.ok) {
+                        res.json().then((res) => {
+                            if (res.status) {
+                                this.username = res.status
+
+                                this.$http.jsonp(
+                                    'http://' + this.regUrl + '/php/favorite/delFavorite.php', {
+                                        params: {
+                                            name: this.username,
+                                            indexs: index
+                                        },
+                                        jsonp: 'callback'
+                                    }).then(function (res) {
+                                        // console.log(res)
+                                        if (res.ok) {
+                                            res.json().then((res) => {
+                                                if (res.status == 0) {
+                                                    //this.$router.push({ path: '/home' })
+                                                } else {
+                                                }
+                                            }, (err) => {
+                                                console.log(err)
+                                            })
+
+                                        }
+                                    }, function (error) {
+                                        console.log(error)
+                                    })
+                            }
+                        })
+                    }
+                })
+
             }
             //e.srcElement.className = 'activeName mu-ripple-wrapper'
             //this.isActive = !this.isActive //点击反转star颜色
@@ -114,9 +196,6 @@ export default {
         detail() {
             this.$router.push({ path: '/detail' }) //跳转到详情页
         }
-    },
-    created() {
-
     }
 }
 </script>
@@ -150,7 +229,7 @@ export default {
         }
     }
     .gridlist-demo-container {
-        margin-bottom: 55px; // display: flex;
+        // margin-bottom: 55px; // display: flex;
         // flex-wrap: wrap;
         // justify-content: space-around;
         .activeName {
@@ -160,7 +239,7 @@ export default {
             height: 36px;
             line-height: 44px;
         }
-    } 
+    }
     .mu-toast {
         width: 134px;
         height: 80px;
@@ -170,6 +249,17 @@ export default {
         background-color: rgba(0, 0, 0, 0.45);
         left: 50%;
         margin-left: -67px;
+    }
+    .second-title {
+        top: 0px;
+        height: 40px;
+        line-height: 40px;
+        margin-left: 10px;
+        background-color: #f00;
+    }
+    .mydefoot {
+        width: 100%;
+        height: 56px;
     }
 }
 
