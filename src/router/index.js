@@ -16,6 +16,7 @@ import address from '../components/page/Address.vue' //地址选择页
 import account from '../components/page/Account.vue' //个人账号设置
 import personInfo from '../components/page/PersonInfo.vue' //个人资料设置
 import favorite from '../components/page/Favorite.vue' //个人收藏
+import order from '../components/page/Order.vue' //确认订单
 
 Vue.use(VueRouter)
 
@@ -40,6 +41,7 @@ const routes = [
     { path: '/account', component: account },
     { path: '/personInfo', component: personInfo },
     { path: '/favorite', component: favorite },
+    { path: '/order', component: order },
 ]
 
 export default new VueRouter({

@@ -70,12 +70,12 @@ export default {
                                                 // console.log(element.id)
                                                 this.list.push(element)
 
-                                                let myobj = new Object()
+                                                let myobj = new Object()        //新的对象存入数组ids中
                                                 myobj.id = ""
                                                 myobj.shopnum = ''
 
-                                                this.ids.push(myobj)
-                                                this.ids[index].id = element.id
+                                                this.ids.push(myobj)            //对象存入数组中
+                                                this.ids[index].id = element.id //该用户购物车里每个商品的id
                                             }, this);
 
                                         }, (err) => {
@@ -130,9 +130,9 @@ export default {
                         res.json().then((res)=>{
                             console.log(res.status)
                             if(res.status){
-                                console.log('ok')
+                                this.$router.push({ path: '/order' })
                             }else{
-                                console.log('no')
+                                this.$router.push({ path: '/order' })
                             }
                         },(err)=>{
 
