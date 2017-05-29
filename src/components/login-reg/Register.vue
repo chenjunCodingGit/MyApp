@@ -52,6 +52,7 @@ export default {
                     this.message = '注册失败'
                     this.regPsw = ''
                 } else {
+                    //注册用户
                     this.$http.get(
                         'http://' + this.regUrl + '/php/register.php',
                         {
@@ -73,6 +74,27 @@ export default {
                     }, function (err) {
                         console.log(err)
                     })
+
+                    //order表插入唯一username
+                    this.$http.jsonp(
+                        'http://' + this.regUrl + '/php/order/insertordername.php',
+                        {
+                            params: {
+                                username: this.regName
+                            },
+                            jsonp: 'callback'
+                        }
+                    ).then((res) => {
+                        if (res.ok) {
+                            res.json().then((res) => {
+                                console.log(res)
+                            }, (error) => {
+                                console.log(error)
+                            })
+                        }
+                    })
+
+
                 }
                 if (this.toastTimer) clearTimeout(this.toastTimer) //toast状态
                 this.toastTimer = setTimeout(() => { this.toast = false }, 1000)
@@ -98,7 +120,7 @@ export default {
                     params: {
                         name: this.regName
                     },
-                    jsonp:'callback'
+                    jsonp: 'callback'
                 }
             ).then(function (res) {
                 if (res.ok) {

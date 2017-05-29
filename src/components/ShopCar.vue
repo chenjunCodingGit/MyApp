@@ -119,6 +119,7 @@ export default {
     },
     methods: {
         submit() { //提交结算
+            //更新shopcar信息
             this.$http.jsonp(
                 'http://' + this.regUrl + '/php/shopcar/updateShopcar.php', {
                     params: {
@@ -126,19 +127,42 @@ export default {
                     },
                     jsonp: 'callback'
                 }).then((res) => {
-                    if(res.ok){
-                        res.json().then((res)=>{
-                            console.log(res.status)
-                            if(res.status){
+                    if (res.ok) {
+                        res.json().then((res) => {
+                            // console.log(res.status)
+                            if (res.status) {
                                 this.$router.push({ path: '/order' })
-                            }else{
+                            } else {
                                 this.$router.push({ path: '/order' })
                             }
-                        },(err)=>{
+                        }, (err) => {
 
                         })
                     }
                 })
+
+
+            //将该用户的总价更新到order表中
+            if (this.username) {
+                this.$http.jsonp(
+                    'http://' + this.regUrl + '/php/order/updateprice.php',
+                    {
+                        params: {
+                            username: this.username,
+                            totalprice:this.submitTitle
+                        },
+                        jsonp: 'callback'
+                    }
+                ).then((res) => {
+                    if (res.ok) {
+                        res.json().then((res) => {
+                            // console.log(res)
+                        }, (error) => {
+                            console.log(error)
+                        })
+                    }
+                })
+            }
         },
         clearShopCar() { //清空购物车
             this.list = ''

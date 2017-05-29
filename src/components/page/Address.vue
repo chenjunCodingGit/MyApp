@@ -18,6 +18,7 @@
             </p>
         </div>
         <mu-raised-button label="保存" fullWidth @click='saveOrder' />
+        <mu-toast v-if="toast" :message="message" @close="hideToast" />
     </div>
 </template>
 
@@ -75,7 +76,7 @@ export default {
         ).then((res) => {
             if (res.ok) {
                 res.json().then((res) => {
-                    console.log(res.status)
+                    // console.log(res.status)
                     this.username = res.status
                 }, (err) => {
                     console.log(err)
@@ -102,11 +103,13 @@ export default {
             addressCity: '北京',
             recivename: '',
             recivetel: '',
+            toast: false,        //是否显示toast
+            message: '',         //显示toast信息
             regUrl: staticList.staticList[0]
         }
     },
     methods: {
-        addressChange(value, index) {
+        addressChange(value, index) { //选择地址
             switch (index) {
                 case 0:
                     this.addressProvince = value
@@ -120,28 +123,48 @@ export default {
             }
             this.address = [this.addressProvince, this.addressCity]
         },
-        saveOrder() {
-            this.$http.jsonp(
-                'http://' + this.regUrl + '/php/order/updateorder.php',
-                {
-                    params: {
-                        username: this.username,
-                        recivename: this.recivename,
-                        addressProvince: this.addressProvince,
-                        addressCity: this.addressCity,
-                        tel: this.recivetel
-                    },
-                    jsonp: 'callback'
-                }
-            ).then((res) => {
-                if (res.ok) {
-                    res.json().then((res) => {
-                        console.log(res.status)
-                    }, (err) => {
-                        console.log(err)
+        saveOrder() { //提交保存
+            if (this.username) {
+                if (this.recivename != '' && this.recivetel != '') {
+                    this.$http.jsonp(
+                        'http://' + this.regUrl + '/php/order/updateorder.php',
+                        {
+                            params: {
+                                username: this.username,
+                                recivename: this.recivename,
+                                addressProvince: this.addressProvince,
+                                addressCity: this.addressCity,
+                                tel: this.recivetel
+                            },
+                            jsonp: 'callback'
+                        }
+                    ).then((res) => {
+                        if (res.ok) {
+                            res.json().then((res) => {
+                                // console.log(res.status) 1
+                                if (res.status) {
+                                    this.$router.push({ path: '/order' })
+                                }
+                            }, (err) => {
+                                console.log(err)
+                            })
+                        }
                     })
+                } else {
+                    this.toast = true
+                    this.message = '收货人或电话为空'
                 }
-            })
+            } else {
+                this.toast = true
+                this.message = '请先登录'
+            }
+
+            if (this.toastTimer) clearTimeout(this.toastTimer) //toast状态
+            this.toastTimer = setTimeout(() => { this.toast = false }, 500)
+        },
+        hideToast() {
+            this.toast = false
+            if (this.toastTimer) clearTimeout(this.toastTimer)
         }
     },
     computed: {
@@ -178,6 +201,10 @@ export default {
         .info-input:nth-child(2) {
             margin-bottom: 0px;
         }
+    }
+    .mu-toast {
+        border-radius: 0px;
+        text-align: center;
     }
 }
 </style>
