@@ -5,6 +5,12 @@ import router from './router/index' //全局引入路由
 
 import VueResource from 'vue-resource'; //全局引入ajax
 Vue.use(VueResource);
+import VueCookie from 'vue-cookie' //全局引入cookie
+Vue.use(VueCookie);
+
+// console.log(Vue.cookie)
+
+import store from './store/index.js' //全局引入vuex
 
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
@@ -22,6 +28,7 @@ Vue.component(TabContainer.name, TabContainer);
 Vue.component(TabContainerItem.name, TabContainerItem);
 
 new Vue({
+    store,
     el: '#app',
     router,
     render: h => h(App)

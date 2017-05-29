@@ -255,7 +255,7 @@ export default {
         height: 40px;
         line-height: 40px;
         margin-left: 10px;
-        background-color: #f00;
+        // background-color: #f00;
     }
     .mydefoot {
         width: 100%;

@@ -1,13 +1,23 @@
 <template>
     <div class="myaddress">
         <TopBar title="地址"></TopBar>
+        <div class="address-flex">
+            <div class="info-input">
+                <p>收货人</p>
+                <input v-model="recivename" />
+            </div>
+            <div class="info-input">
+                <p class="email">电话</p>
+                <input v-model="recivetel" />
+            </div>
+        </div>
         <div class="demo-picker-container">
             <mu-picker :slots="addressSlots" :visible-item-count="5" @change="addressChange" :values="address" />
             <p>
                 您选择的城市是： {{addressProvince}} {{addressCity}}
             </p>
         </div>
-    
+        <mu-raised-button label="保存" fullWidth @click='saveOrder' />
     </div>
 </template>
 
@@ -48,13 +58,34 @@ const address = {
     '澳门': ['澳门'],
     '台湾': ['台北市', '高雄市', '台北县', '桃园县', '新竹县', '苗栗县', '台中县', '彰化县', '南投县', '云林县', '嘉义县', '台南县', '高雄县', '屏东县', '宜兰县', '花莲县', '台东县', '澎湖县', '基隆市', '新竹市', '台中市', '嘉义市', '台南市']
 }
+import Vue from 'vue'
 import TopBar from '../public/TopBar.vue'
+import staticList from '../data/Global.js'
+//import { mapActions, mapGetters } from 'vuex' //mapActions 管理事件 mapGetters获取数据
 export default {
-    components:{
+    components: {
         TopBar
+    },
+    created() {
+        this.$http.jsonp(
+            'http://' + this.regUrl + '/php/session.php',
+            {
+                jsonp: 'callback'
+            }
+        ).then((res) => {
+            if (res.ok) {
+                res.json().then((res) => {
+                    console.log(res.status)
+                    this.username = res.status
+                }, (err) => {
+                    console.log(err)
+                })
+            }
+        })
     },
     data() {
         return {
+            username: '',
             addressSlots: [
                 {
                     width: '100%',
@@ -68,7 +99,10 @@ export default {
             ],
             address: ['北京', '北京'],
             addressProvince: '北京',
-            addressCity: '北京'
+            addressCity: '北京',
+            recivename: '',
+            recivetel: '',
+            regUrl: staticList.staticList[0]
         }
     },
     methods: {
@@ -85,13 +119,65 @@ export default {
                     break
             }
             this.address = [this.addressProvince, this.addressCity]
+        },
+        saveOrder() {
+            this.$http.jsonp(
+                'http://' + this.regUrl + '/php/order/updateorder.php',
+                {
+                    params: {
+                        username: this.username,
+                        recivename: this.recivename,
+                        addressProvince: this.addressProvince,
+                        addressCity: this.addressCity,
+                        tel: this.recivetel
+                    },
+                    jsonp: 'callback'
+                }
+            ).then((res) => {
+                if (res.ok) {
+                    res.json().then((res) => {
+                        console.log(res.status)
+                    }, (err) => {
+                        console.log(err)
+                    })
+                }
+            })
         }
+    },
+    computed: {
+
     }
 }
 </script>
 
-<style lang="css">
-.demo-picker-container {
-    width: 256px;
+<style lang="less">
+.myaddress {
+    .demo-picker-container {
+        width: 256px;
+        margin-bottom: 20px;
+    }
+    .address-flex {
+        width: 100%;
+        .info-input {
+            display: flex;
+            height: 60px;
+            margin-top: 40px;
+            align-items: center;
+            justify-content: center;
+            p {
+                flex: 1;
+                margin-left: 40px;
+            }
+            input {
+                flex: 3;
+                margin-right: 20px;
+                height: 30px;
+                outline: none;
+            }
+        }
+        .info-input:nth-child(2) {
+            margin-bottom: 0px;
+        }
+    }
 }
 </style>

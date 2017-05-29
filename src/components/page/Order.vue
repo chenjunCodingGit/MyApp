@@ -25,10 +25,15 @@
         <div class="pay-model">支付方式</div>
         <mu-radio class="demo-radio" label="货到付款" name="group" nativeValue="simple2" labelLeft/>
         <div class="total1">
-            <p>合计：</p><p>¥</p><p>{{total}} </p><p>运费：¥0</p>
+            <p>合计：</p>
+            <p>¥</p>
+            <p>{{total}} </p>
+            <p>运费：¥0</p>
         </div>
         <div class="total2">
-            <p>应付金额：</p><p>¥</p><p>{{total}} </p>
+            <p>应付金额：</p>
+            <p>¥</p>
+            <p>{{total}} </p>
         </div>
         <mu-raised-button @click='sublime' label="提交订单" class="demo-raised-button" primary/>
     </div>
@@ -41,20 +46,39 @@ export default {
     components: {
         TopBar
     },
+    created() {
+        this.$http.jsonp(
+            'http://' + this.regUrl + '/php/session.php',
+            {
+                jsonp: 'callback'
+            }
+        ).then((res)=>{
+            if(res.ok){
+                res.json().then((res)=>{
+                    this.username = res.status
+                },(err)=>{
+                    console.log(err)
+                })
+            }
+        })
+    },
     data() {
         return {
-            recivename: '陈俊',
-            recivetel: 13033315454,
-            reciveadd: '重庆市大学城',
-            total:1110,
+            username:'',
+            recivename: '',
+            recivetel: '',
+            reciveadd: '',
+            total: 1110,
             regUrl: staticList.staticList[0]
         }
     },
-    methods:{
-        address(){
-            console.log(33)            
+    methods: {
+        address() {
+            if(this.username){
+                this.$router.push({ path: '/address' })
+            }
         },
-        sublime(){
+        sublime() {
             console.log(3)
         }
     }
@@ -116,44 +140,46 @@ export default {
             border-bottom: 1px solid #aaa;
         }
     }
-    .pay-model{
+    .pay-model {
         height: 50px;
         line-height: 50px;
         padding-left: 20px;
     }
-    .demo-radio{
+    .demo-radio {
         width: 90%;
         margin-left: 20px;
         margin-right: 20px;
         height: 36px;
         border-bottom: 1px solid #aaa;
     }
-    .total1{
+    .total1 {
         margin-top: 100px;
     }
-    .total1,.total2{
+    .total1,
+    .total2 {
         display: flex;
         justify-content: flex-end;
         margin-right: 20px;
         height: 26px;
     }
-    .total1 p:nth-child(2){
+    .total1 p:nth-child(2) {
         color: #f00;
     }
-    .total1 p:nth-child(3){
+    .total1 p:nth-child(3) {
         color: #f00;
         margin-right: 15px;
     }
-    .total2{
+    .total2 {
         height: 60px;
     }
-    .total2 p{
+    .total2 p {
         font-size: 20px;
     }
-    .total2 p:nth-child(2),p:nth-child(3){
+    .total2 p:nth-child(2),
+    p:nth-child(3) {
         color: #f00;
     }
-    .mu-raised-button.mu-raised-button-inverse{
+    .mu-raised-button.mu-raised-button-inverse {
         width: 90%;
         margin-left: 5%;
         margin-top: 20px;
