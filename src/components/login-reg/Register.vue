@@ -66,7 +66,7 @@ export default {
                         this.isEmptyInput = false         //emptyInput置为初始class
                         this.message = '注册成功'
                         setTimeout(() => {
-                            this.$router.push({ path: '/home' })      //注册成功后跳转到home
+                            this.$router.push({ path: '/login' })      //注册成功后跳转到login
                         }, 500)
 
                         this.regName = ''

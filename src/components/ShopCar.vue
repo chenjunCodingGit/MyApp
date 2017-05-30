@@ -3,34 +3,34 @@
         <mu-appbar title="购物车">
             <mu-flat-button @click='clearShopCar' label="清空购物车" slot="right" />
         </mu-appbar>
+        <div class="myscroll">
+            <div v-for="title,index in list" :key="index">
+                <div class="select-shop">
+                    <mu-checkbox class="demo-checkbox" @change='selectCheck(index)' :selected='title.selected' />
     
-        <div v-for="title,index in list" :key="index">
-            <div class="select-shop">
-                <mu-checkbox class="demo-checkbox" @change='selectCheck(index)' :selected='title.selected' />
-    
-                <div class="shop-img">
-                    <img :src="title.image" />
-                </div>
-                <div class="shop-left">
-                    <div class="shop-title">
-                        <div class="shop-title-top">{{title.title}}</div>
-                        <div class="shop-title-standard">{{title.scale}}</div>
+                    <div class="shop-img">
+                        <img :src="title.image" />
                     </div>
-                    <div class="shop-title-bottom">
-                        <div class="title-bottom-money">
-                            <span>¥</span>
-                            <span>{{title.price}}</span>
+                    <div class="shop-left">
+                        <div class="shop-title">
+                            <div class="shop-title-top">{{title.title}}</div>
+                            <div class="shop-title-standard">{{title.scale}}</div>
                         </div>
-                        <div class="title-bottom-btn">
-                            <span @click='decrease(index)'>-</span>
-                            <span>{{title.shopnum}}</span>
-                            <span @click='add(index)'>+</span>
+                        <div class="shop-title-bottom">
+                            <div class="title-bottom-money">
+                                <span>¥</span>
+                                <span>{{title.price}}</span>
+                            </div>
+                            <div class="title-bottom-btn">
+                                <span @click='decrease(index)'>-</span>
+                                <span>{{title.shopnum}}</span>
+                                <span @click='add(index)'>+</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    
         <div class="submit">
             <div class="submit-title">商品总计：</div>
             <div class="submit-total">
@@ -39,6 +39,7 @@
             </div>
             <mu-flat-button @click='submit' label="去结算" slot="right" primary/>
         </div>
+        <mu-toast v-if="toast" :message="message" @close="hideToast" />
     </div>
 </template>
 
@@ -105,7 +106,13 @@ export default {
             submitTitle: 0, //商品总计
             list: [],
             ids: [],
-            regUrl: staticList.staticList[0]
+            toast: false,        //是否显示toast
+            message: '',         //显示toast信息
+            regUrl: staticList.staticList[0],
+
+            selectID: [],          //被选中的商品id
+            
+            selectNum:0
             // list: [{
             //     id: 1,
             //     image: './static/home/two.jpg',
@@ -119,50 +126,89 @@ export default {
     },
     methods: {
         submit() { //提交结算
-            //更新shopcar信息
-            this.$http.jsonp(
-                'http://' + this.regUrl + '/php/shopcar/updateShopcar.php', {
-                    params: {
-                        ids: this.ids
-                    },
-                    jsonp: 'callback'
-                }).then((res) => {
-                    if (res.ok) {
-                        res.json().then((res) => {
-                            // console.log(res.status)
-                            if (res.status) {
-                                this.$router.push({ path: '/order' })
-                            } else {
-                                this.$router.push({ path: '/order' })
-                            }
-                        }, (err) => {
-
-                        })
-                    }
-                })
-
-
-            //将该用户的总价更新到order表中
-            if (this.username) {
+            if (this.submitTitle > 0) {
+                //更新shopcar信息
                 this.$http.jsonp(
-                    'http://' + this.regUrl + '/php/order/updateprice.php',
+                    'http://' + this.regUrl + '/php/shopcar/updateShopcar.php', {
+                        params: {
+                            ids: this.ids
+                        },
+                        jsonp: 'callback'
+                    }).then((res) => {
+                        if (res.ok) {
+                            res.json().then((res) => {
+                                // console.log(res.status)
+                                if (res.status) {
+                                    // this.$router.push({ path: '/order' })
+
+                                } else {
+                                    // this.$router.push({ path: '/order' })
+                                }
+                            }, (err) => {
+
+                            })
+                        }
+                    })
+
+                //被选中的商品
+                let j = 0
+                for (let i in this.list) {
+                    if (this.list[i].selected == true) {
+                        this.selectID[j] = this.list[i].id
+                        j++
+                        //将选中的商品存入支付数据库
+                        this.selectNum+=1
+                    }
+                }
+
+                this.$http.jsonp(
+                    'http://' + this.regUrl + '/php/shopcar/deletepay.php',
                     {
                         params: {
-                            username: this.username,
-                            totalprice:this.submitTitle
+                            ids:this.selectID
                         },
                         jsonp: 'callback'
                     }
                 ).then((res) => {
                     if (res.ok) {
                         res.json().then((res) => {
-                            // console.log(res)
+                            console.log(res)
+                            console.log(this.selectID)
                         }, (error) => {
                             console.log(error)
                         })
                     }
                 })
+
+
+                //将该用户的总价更新到order表中
+                if (this.username) {
+                    this.$http.jsonp(
+                        'http://' + this.regUrl + '/php/order/updateprice.php',
+                        {
+                            params: {
+                                username: this.username,
+                                totalprice: this.submitTitle
+                            },
+                            jsonp: 'callback'
+                        }
+                    ).then((res) => {
+                        if (res.ok) {
+                            res.json().then((res) => {
+                                // console.log(res)
+                            }, (error) => {
+                                console.log(error)
+                            })
+                        }
+                    })
+                }
+            } else {
+                this.toast = true
+                this.message = '您还未选择商品'
             }
+
+            if (this.toastTimer) clearTimeout(this.toastTimer) //toast状态
+            this.toastTimer = setTimeout(() => { this.toast = false }, 1000)
         },
         clearShopCar() { //清空购物车
             this.list = ''
@@ -228,6 +274,10 @@ export default {
             if (!this.list[index].selected) { //当前checkbox状态为false
                 this.submitTitle -= this.list[index].price * this.list[index].shopnum //商品总价-被选择商品总价
             }
+        },
+        hideToast() {
+            this.toast = false
+            if (this.toastTimer) clearTimeout(this.toastTimer)
         }
     }
 }
@@ -236,6 +286,8 @@ export default {
 <style lang="less">
 .shopcar {
     .mu-appbar {
+        position: fixed;
+        top: 0;
         padding: 0px;
         height: 50px;
         line-height: 50px;
@@ -253,93 +305,99 @@ export default {
             padding-left: 7px;
         }
     }
-    .select-shop {
-        width: 100%;
-        height: 120px;
-        border-bottom: 1px solid #ececec;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        .mu-checkbox {
-            margin-left: 10px;
-        }
-        .shop-img {
-            flex: 1.5;
-            background-color: #f00;
-            height: 90px;
-            margin-left: 10px;
-            img {
-                width: 100%;
-                height: 100%;
-            }
-        }
-        .shop-left {
-            flex: 4;
+    .myscroll {
+        overflow: scroll;
+        flex: 1;
+        margin-top: 50px;
+        margin-bottom: 106px;
+        .select-shop {
+            width: 100%;
+            height: 120px;
+            border-bottom: 1px solid #ececec;
             display: flex;
-            flex-direction: column;
-            margin-left: 10px;
-            height: 90px;
-            .shop-title {
-                height: 80px;
-                .shop-title-standard {
-                    color: #aaa;
+            flex-direction: row;
+            align-items: center;
+
+            .mu-checkbox {
+                margin-left: 10px;
+            }
+            .shop-img {
+                flex: 1.5;
+                background-color: #f00;
+                height: 90px;
+                margin-left: 10px;
+                img {
+                    width: 100%;
+                    height: 100%;
                 }
             }
-            .shop-title-bottom {
+            .shop-left {
+                flex: 4;
                 display: flex;
-                height: 30px;
-                flex-direction: row;
-                span {
-                    display: inline-block;
+                flex-direction: column;
+                margin-left: 10px;
+                height: 90px;
+                .shop-title {
+                    height: 80px;
+                    .shop-title-standard {
+                        color: #aaa;
+                    }
                 }
-                .title-bottom-money {
-                    flex: 1;
-                    height: 30px;
-                    color: #7e57c2;
-                }
-                .title-bottom-btn {
-                    flex: 1;
-                    height: 30px;
-                    margin-right: 30px;
-                    border: 1px solid #ececec;
+                .shop-title-bottom {
                     display: flex;
-                    align-items: center;
-                    span:nth-child(1) {
-                        width: 30px;
-                        height: 30px;
-                        line-height: 30px;
-                        text-align: center;
-                        border-right: 1px solid #ececec;
-                        font-size: 22px;
+                    height: 30px;
+                    flex-direction: row;
+                    span {
+                        display: inline-block;
                     }
-                    span:nth-child(1):hover {
-                        color: #fff;
-                        background-color: #7e57c2;
-                    }
-                    span:nth-child(2) {
+                    .title-bottom-money {
                         flex: 1;
-                        text-align: center;
-                    }
-                    span:nth-child(3) {
-                        width: 30px;
                         height: 30px;
-                        line-height: 30px;
-                        text-align: center;
-                        border-left: 1px solid #ececec;
+                        color: #7e57c2;
                     }
-                    span:nth-child(3):hover {
-                        color: #fff;
-                        background-color: #7e57c2;
+                    .title-bottom-btn {
+                        flex: 1;
+                        height: 30px;
+                        margin-right: 30px;
+                        border: 1px solid #ececec;
+                        display: flex;
+                        align-items: center;
+                        span:nth-child(1) {
+                            width: 30px;
+                            height: 30px;
+                            line-height: 30px;
+                            text-align: center;
+                            border-right: 1px solid #ececec;
+                            font-size: 22px;
+                        }
+                        span:nth-child(1):hover {
+                            color: #fff;
+                            background-color: #7e57c2;
+                        }
+                        span:nth-child(2) {
+                            flex: 1;
+                            text-align: center;
+                        }
+                        span:nth-child(3) {
+                            width: 30px;
+                            height: 30px;
+                            line-height: 30px;
+                            text-align: center;
+                            border-left: 1px solid #ececec;
+                        }
+                        span:nth-child(3):hover {
+                            color: #fff;
+                            background-color: #7e57c2;
+                        }
                     }
                 }
             }
         }
     }
 
-
     .submit {
-        position: absolute;
-        bottom: 60px;
+        position: fixed;
+        bottom: 56px;
         height: 50px;
         line-height: 50px;
         width: 100%;
@@ -348,6 +406,7 @@ export default {
         flex-direction: row;
         justify-content: center;
         align-items: center;
+        background-color: #fff;
 
         .submit-title {
             text-align: right;
@@ -373,6 +432,17 @@ export default {
             color: #fff;
             margin-right: 2px;
         }
+    }
+
+    .mu-toast {
+        width: 150px;
+        height: 80px;
+        top: 200px;
+        border-radius: 5px;
+        line-height: 79px;
+        background-color: rgba(0, 0, 0, 0.45);
+        left: 50%;
+        margin-left: -75px; // color: #f00;
     }
 }
 </style>

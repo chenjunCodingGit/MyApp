@@ -36,7 +36,7 @@
             <p>{{total}} </p>
         </div>
         <mu-raised-button @click='sublime' label="提交订单" class="demo-raised-button" primary/>
-        <mu-toast v-if="toast" :message="message" @close="hideToast" />
+        <mu-toast v-if="toast" :message="message" :class="{paysuccess:isPaysuccess}" @close="hideToast" />
     </div>
 </template>
 <script>
@@ -90,7 +90,7 @@ export default {
     },
     data() {
         return {
-            redioValue:'',
+            redioValue: '',
             isSelect: 0, //收货人电话地址是否已经选择
             username: '',
             recivename: '',
@@ -99,6 +99,7 @@ export default {
             total: 0,
             toast: false,        //是否显示toast
             message: '',         //显示toast信息
+            isPaysuccess: false,   //支付成功toast
             regUrl: staticList.staticList[0]
         }
     },
@@ -109,16 +110,21 @@ export default {
             }
         },
         sublime() {
-            if (this.recivename&&this.redioValue) { //收货人和支付方式未选
+            if (this.recivename && this.redioValue) { //支付成功
                 console.log(this.isSelect)
-                
-            }else{
+                this.isPaysuccess = true
+                this.toast = true
+                this.message = '支付成功'
+                setTimeout(() => {
+                    this.$router.push({ path: '/home' })
+                }, 1500)
+            } else {
                 this.toast = true
                 this.message = '支付方式或收货人信息为空'
             }
 
             if (this.toastTimer) clearTimeout(this.toastTimer) //toast状态
-            this.toastTimer = setTimeout(() => { this.toast = false }, 500)
+            this.toastTimer = setTimeout(() => { this.toast = false }, 1500)
         },
         hideToast() {
             this.toast = false
@@ -231,6 +237,16 @@ export default {
     .mu-toast {
         border-radius: 0px;
         text-align: center;
+    }
+    .mu-toast.paysuccess {
+        width: 110px;
+        height: 80px;
+        top: 200px;
+        border-radius: 5px;
+        line-height: 79px;
+        background-color: rgba(0, 0, 0, 0.45);
+        left: 50%;
+        margin-left: -55px; // color: #f00;
     }
 }
 </style>
