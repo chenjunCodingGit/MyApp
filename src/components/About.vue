@@ -13,7 +13,7 @@
 			</div>
 		</div>
 		<mu-list>
-			<mu-list-item class="list-item-order" title="我的订单" icon="keyboard_arrow_right">
+			<mu-list-item @click='orderDetail' class="list-item-order" title="我的订单" icon="keyboard_arrow_right">
 				<mu-icon slot="left" value="person_outline" />
 				<mu-icon slot="right" value="keyboard_arrow_right" />
 			</mu-list-item>
@@ -21,9 +21,9 @@
 		<mu-paper>
 			<mu-bottom-nav :value="bottomNav" @change="handleChange">
 				<mu-bottom-nav-item value="recents" title="待付款" icon="credit_card" />
-				<mu-bottom-nav-item value="favorites" title="待发货" icon="send" />
-				<mu-bottom-nav-item value="nearby" title="待收货" icon="description" />
-				<mu-bottom-nav-item value="over	" title="已完成" icon="assignment_turned_in" />
+				<mu-bottom-nav-item  value="favorites" title="待发货" icon="send" />
+				<mu-bottom-nav-item  value="nearby" title="待收货" icon="description" />
+				<mu-bottom-nav-item  value="over	" title="已完成" icon="assignment_turned_in" />
 			</mu-bottom-nav>
 		</mu-paper>
 		<mu-list>
@@ -93,7 +93,8 @@ export default {
 	methods: {
 		handleChange(val) {
 			this.bottomNav = val
-			//console.log(val)
+			// console.log(val)
+			this.$router.push({ path: '/orderbay' })			
 		},
 		setAccount() {
 			this.$router.push({ path: '/account' }) //跳转到搜索页 
@@ -135,6 +136,9 @@ export default {
 		},
 		setFavorite(){
 			this.$router.push({ path: '/favorite' })
+		},
+		orderDetail(){
+			this.$router.push({ path: '/orderbay' })			
 		}
 	}
 }

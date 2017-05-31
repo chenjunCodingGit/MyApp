@@ -17,6 +17,8 @@ import account from '../components/page/Account.vue' //个人账号设置
 import personInfo from '../components/page/PersonInfo.vue' //个人资料设置
 import favorite from '../components/page/Favorite.vue' //个人收藏
 import order from '../components/page/Order.vue' //确认订单
+import orderbay from '../components/page/Orderbay.vue' //已发货确认订单
+import evaluate from '../components/page/Evaluate.vue' //评价
 
 Vue.use(VueRouter)
 
@@ -42,6 +44,8 @@ const routes = [
     { path: '/personInfo', component: personInfo },
     { path: '/favorite', component: favorite },
     { path: '/order', component: order },
+    { path: '/orderbay', component: orderbay },
+    { path: '/evaluate', component: evaluate },
 ]
 
 export default new VueRouter({

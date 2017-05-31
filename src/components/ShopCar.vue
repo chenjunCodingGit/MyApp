@@ -111,8 +111,11 @@ export default {
             regUrl: staticList.staticList[0],
 
             selectID: [],          //被选中的商品id
-            
-            selectNum:0
+            selectImg: [],
+            selectTil: [],
+            selectPrice: [],
+            selectShopnum: [],
+            goodId: [1, 2],
             // list: [{
             //     id: 1,
             //     image: './static/home/two.jpg',
@@ -157,15 +160,16 @@ export default {
                         this.selectID[j] = this.list[i].id
                         j++
                         //将选中的商品存入支付数据库
-                        this.selectNum+=1
+                        // this.selectNum += 1
                     }
                 }
-
+                // console.log(this.selectID)
+                ////通过id数组查询该被选中的商品
                 this.$http.jsonp(
-                    'http://' + this.regUrl + '/php/shopcar/deletepay.php',
+                    'http://' + this.regUrl + '/php/pay/selectpay.php',
                     {
                         params: {
-                            ids:this.selectID
+                            ids: this.selectID
                         },
                         jsonp: 'callback'
                     }
@@ -173,13 +177,56 @@ export default {
                     if (res.ok) {
                         res.json().then((res) => {
                             console.log(res)
-                            console.log(this.selectID)
-                        }, (error) => {
-                            console.log(error)
+                            for (let i in res) { //将选择的商品通过id查询出来，存入相应数组中
+                                this.selectImg[i] = res[i].image
+                                this.selectTil[i] = res[i].title
+                                this.selectPrice[i] = Number(res[i].price) * Number(res[i].shopnum)
+                                this.selectShopnum[i] = Number(res[i].shopnum)
+                                // this.goodId[i] = res[i].googid
+                            }
+
+                            //将被选中的商品查询出来存入
+                            this.$http.jsonp(
+                                'http://' + this.regUrl + '/php/pay/insertpay.php',
+                                {
+                                    params: {
+                                        name: this.username,
+                                        image: this.selectImg,
+                                        title: this.selectTil,
+                                        thisprice: this.selectPrice,
+                                        shopnum: this.selectShopnum,
+                                        ispay: 0,
+                                        goodid: this.goodId,
+                                    },
+                                    jsonp: 'callback'
+                                }
+                            ).then((res) => {
+                                if (res.ok) {
+
+                                    //删除购物车被选中的商品
+                                    this.$http.jsonp(
+                                        'http://' + this.regUrl + '/php/shopcar/deletepay.php',
+                                        {
+                                            params: {
+                                                ids: this.selectID
+                                            },
+                                            jsonp: 'callback'
+                                        }
+                                    ).then((res) => {
+                                        if (res.ok) {
+                                            res.json().then((res) => {
+                                                console.log(res)
+                                                console.log(this.selectID)
+                                            }, (error) => {
+                                                console.log(error)
+                                            })
+                                        }
+                                    })
+                                }
+                            })
                         })
                     }
                 })
-
 
                 //将该用户的总价更新到order表中
                 if (this.username) {
