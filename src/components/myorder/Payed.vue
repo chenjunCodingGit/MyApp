@@ -11,16 +11,16 @@
                     <span>{{title.shopnum}}</span>
                     <span>总价 </span>
                     <span>{{title.thisprice}}</span>
-                    <input @click.stop.prevent="receive(index)" type="button" value="去评价" />
+                    <input @click.stop="receive(index)" type="button" value="去评价" />
                 </div>
             </div>
         </div>
-        <!--<input @click.stop.prevent="receive($event)" type="button" value="去评价" />-->
+        <!--<input @click.stop.prevent="receive()" type="button" value="去评价" />-->
     </div>
 </template>
 <script>
 import staticList from '../data/Global.js'
-import Bus from '../data/bus.js'
+// import Bus from '../data/bus.js'
 export default {
     created() {
         this.$http.jsonp(
@@ -62,19 +62,56 @@ export default {
             list: [],
             toast: false,        //是否显示toast
             message: '',         //显示toast信息
+            goodid: '0',
             regUrl: staticList.staticList[0],
         }
     },
     methods: {
         receive(index) {
-            // console.log(this.list[index].goodid)
-            //点击支付更新ispay状态为1
-            Bus.$emit('getTarget', this.list[index].goodid); 
-            // this.$router.push({ path: '/evaluate' })
-            // console.log(event.target)
+            // console.log(this.list[index].id)
+            //将商品id插入评论表
+            this.goodid = this.list[index].goodid
+            this.$http.jsonp(
+                'http://' + this.regUrl + '/php/myorder/payed/insertgoodid.php',
+                {
+                    params: {
+                        name: this.username,
+                        goodid: this.list[index].goodid
+                    },
+                    jsonp: 'callback'
+                }
+            ).then((res) => {
+                if (res.ok) {
+                    res.json().then((res) => {
+                        // console.log(res)
+                        if (res.status) {
+                            this.$router.push({ path: '/evaluate' })
+                        }
+                    })
+                }
+            })
 
+            //更新该商品的状态为3，表示已经评价
+            this.$http.jsonp(
+                'http://' + this.regUrl + '/php/myorder/payed/updateevaluate.php',
+                {
+                    params: {
+                        thisId: this.list[index].id
+                    },
+                    jsonp: 'callback'
+                }
+            ).then((res) => {
+                if (res.ok) {
+                    res.json().then((res) => {
+                        console.log(res)
+                    })
+                }
+            })
         }
-    }
+    },
+    // destroyed() {
+    //     Bus.$emit('id-selected', this.goodid)
+    // }
 }
 </script>
 <style lang="less">
