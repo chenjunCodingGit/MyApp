@@ -7,32 +7,42 @@
     
         <div class="page-swipe">
             <mt-swipe :auto="3500">
-                <mt-swipe-item :class="{slide1:true}">
-                    <img src="../assets/images/one.jpg" />
+                <mt-swipe-item v-for="tile, index in list" :key="index" :class="{slide1:true}">
+                    <img @click.stop="detail(index)" :src="tile.image"/>
                 </mt-swipe-item>
-                <mt-swipe-item :class="{slide2:true}">
+                <!--<mt-swipe-item :class="{slide2:true}">
                     <img src="../assets/images/two.jpg" />
                 </mt-swipe-item>
                 <mt-swipe-item :class="{slide3:true}">
                     <img src="../assets/images/three.jpg" />
-                </mt-swipe-item>
+                </mt-swipe-item>-->
             </mt-swipe>
         </div>
     
-        <div class="gridlist-demo-container" @click.stop="detail">
+        <div class="gridlist-demo-container">
+            <!--@click.stop="detail"-->
             <mu-grid-list class="gridlist-demo">
                 <mu-sub-header>热门商品</mu-sub-header>
                 <mu-grid-tile v-for="tile, index in list" :key="index">
-                    <img :src="tile.image" />
+                    <img @click.stop="detail(index)" :src="tile.image"/>
                     <span slot="title">{{tile.title}}</span>
-                    <span slot="subTitle">by <b>{{tile.author}}</b></span>
+                    <span slot="subTitle">by
+                        <b>{{tile.author}}</b>
+                    </span>
                     <mu-icon-button label="show toast" @click.stop='showToast(index,$event)' icon="star_border" slot="action" />
                 </mu-grid-tile>
             </mu-grid-list>
         </div>
     
         <div class="second-title">新品展示</div>
-        <div class="mydefoot"></div>
+        <div class="mydefoot">
+            <div class="lineimg">
+                <div @click="selectgood(index)" v-for="item,index in list1" :key="index" class="img">
+                    <img :src="item.image" />
+                    <div>{{item.title}}</div>
+                </div>
+            </div>
+        </div>
         <mu-toast v-if="toast" :message="message" @close="hideToast" />
     </div>
 </template> 
@@ -48,9 +58,17 @@ export default {
                 // console.log(res)
                 if (res.ok) {
                     res.json().then((res) => {
-                        res.forEach(function(element) {
-                            this.list.push(element)
-                        }, this);                   
+                        // res.forEach(function (element) {
+                        //     this.list.push(element)
+                        // }, this);
+                        for (let i in res) {
+                            if (i <= 3) {
+                                this.list.push(res[i])
+                            } else {
+                                this.list1.push(res[i])
+                            }
+                        }
+                        // console.log(this.list)
                     }, (err) => {
                         console.log(err)
                     })
@@ -66,12 +84,8 @@ export default {
             toast: false, //显示toast状态
             message: '成功加入收藏', //toast默认信息
             activeName: new Array(), //保存star颜色状态
-            list:[],
-            // list: [{
-            //     image: './static/home/one.jpg',
-            //     title: 'Breakfast',
-            //     price: '¥100'
-            // }],
+            list: [],
+            list1: [],
             regUrl: staticList.staticList[0]
         }
     },
@@ -193,8 +207,58 @@ export default {
             this.toast = false
             if (this.toastTimer) clearTimeout(this.toastTimer)
         },
-        detail() {
-            this.$router.push({ path: '/detail' }) //跳转到详情页
+        detail(index) {
+            // this.$router.push({ path: '/detail' }) //跳转到详情页
+            // console.log(this.list[index])
+            this.$http.jsonp(
+                'http://' + this.regUrl + '/php/details/updatecontent.php',
+                {
+                    params: {
+                        image: this.list[index].image,
+                        title: this.list[index].title,
+                        describes: this.list[index].describes,
+                        scale: this.list[index].scale,
+                        price: Number(this.list[index].price),
+                        goodid: Number(this.list[index].id),
+                    },
+                    jsonp: 'callback'
+                }
+            ).then((res) => {
+                if (res.ok) {
+                    res.json().then((res) => {
+                        // console.log(res)
+                        if (res.msg == "success") {
+                            this.$router.push({ path: '/detail' })
+                        }
+                    })
+                }
+            })
+        },
+        selectgood(index) { //将信息更新到详情页
+            // console.log(this.list1)
+            this.$http.jsonp(
+                'http://' + this.regUrl + '/php/details/updatecontent.php',
+                {
+                    params: {
+                        image: this.list1[index].image,
+                        title: this.list1[index].title,
+                        describes: this.list1[index].describes,
+                        scale: this.list1[index].scale,
+                        price: Number(this.list1[index].price),
+                        goodid: Number(this.list1[index].id),
+                    },
+                    jsonp: 'callback'
+                }
+            ).then((res) => {
+                if (res.ok) {
+                    res.json().then((res) => {
+                        // console.log(res)
+                        if (res.msg == "success") {
+                            this.$router.push({ path: '/detail' })
+                        }
+                    })
+                }
+            })
         }
     }
 }
@@ -254,12 +318,37 @@ export default {
         top: 0px;
         height: 40px;
         line-height: 40px;
-        margin-left: 10px;
-        // background-color: #f00;
+        margin-left: 10px; // background-color: #f00;
     }
     .mydefoot {
         width: 100%;
-        height: 56px;
+        margin-bottom: 60px;
+        .lineimg {
+            width: 100%;
+            margin-top: 6px;
+            .img:nth-child(2n) {
+                margin-left: 1%;
+            }
+            .img {
+                width: 49%;
+                display: inline-block;
+                position: relative;
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
+                div {
+                    position: absolute;
+                    background-color: rgba(0, 0, 0, 0.3);
+                    width: 100%;
+                    height: 40px;
+                    line-height: 40px;
+                    color: #fff;
+                    text-align: center;
+                    bottom: 0px;
+                }
+            }
+        }
     }
 }
 

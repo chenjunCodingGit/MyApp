@@ -95,7 +95,6 @@ export default {
                 console.log(error)
             })
 
-        // console.log(this.ids)
     },
     computed: {
         // return this.list[index]
@@ -115,7 +114,7 @@ export default {
             selectTil: [],
             selectPrice: [],
             selectShopnum: [],
-            goodId: [1, 2],
+            goodId: []
             // list: [{
             //     id: 1,
             //     image: './static/home/two.jpg',
@@ -140,12 +139,12 @@ export default {
                     }).then((res) => {
                         if (res.ok) {
                             res.json().then((res) => {
-                                // console.log(res.status)
+                                console.log(res.status)
                                 if (res.status) {
-                                    // this.$router.push({ path: '/order' })
+                                    this.$router.push({ path: '/order' })
 
                                 } else {
-                                    // this.$router.push({ path: '/order' })
+                                    this.$router.push({ path: '/order' })
                                 }
                             }, (err) => {
 
@@ -182,10 +181,11 @@ export default {
                                 this.selectTil[i] = res[i].title
                                 this.selectPrice[i] = Number(res[i].price) * Number(res[i].shopnum)
                                 this.selectShopnum[i] = Number(res[i].shopnum)
-                                // this.goodId[i] = res[i].googid
+                                this.goodId[i] = Number(res[i].goodid)
                             }
 
                             //将被选中的商品查询出来存入
+                            // console.log(this.goodId)                            
                             this.$http.jsonp(
                                 'http://' + this.regUrl + '/php/pay/insertpay.php',
                                 {
@@ -195,7 +195,7 @@ export default {
                                         title: this.selectTil,
                                         thisprice: this.selectPrice,
                                         shopnum: this.selectShopnum,
-                                        ispay: 0,
+                                        // ispay: 0,
                                         goodid: this.goodId,
                                     },
                                     jsonp: 'callback'
@@ -215,8 +215,8 @@ export default {
                                     ).then((res) => {
                                         if (res.ok) {
                                             res.json().then((res) => {
-                                                console.log(res)
-                                                console.log(this.selectID)
+                                                // console.log(res)
+                                                // console.log(this.selectID)
                                             }, (error) => {
                                                 console.log(error)
                                             })

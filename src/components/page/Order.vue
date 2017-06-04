@@ -110,13 +110,14 @@ export default {
             }
         },
         sublime() {
-            if (this.recivename && this.redioValue) { //支付成功
+            if (this.recivename && this.redioValue) { //成功提交订单
                 console.log(this.isSelect)
                 this.isPaysuccess = true
                 this.toast = true
-                this.message = '支付成功'
+                this.message = '成功提交'
+                // this.isPaysuccess = true
                 setTimeout(() => {
-                    this.$router.push({ path: '/home' })
+                    this.$router.push({ path: '/orderbay' })
                 }, 1500)
             } else {
                 this.toast = true

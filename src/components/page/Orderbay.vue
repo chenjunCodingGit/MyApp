@@ -65,15 +65,13 @@ export default {
             margin-left: 122px;
         }
     }
+    
     .mint-navbar .mint-tab-item {
         color: #7e57c2;
     }
     .mint-navbar .mint-tab-item.is-selected {
         color: #fff;
     }
-    .sort1 {}
-    .sort2 {}
-    .sort3 {}
-    .sort4 {}
+    
 }
 </style>

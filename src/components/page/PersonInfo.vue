@@ -113,7 +113,7 @@ export default {
                 height: 30px;
                 line-height: 30px;
                 width: 150px;
-                border-bottom: 1px solid #aaa;
+                // border-bottom: 1px solid #aaa;
                 padding-left: 5px;
             }
         }

@@ -66,6 +66,25 @@ export default {
     methods: {
         receive(index) {
             // console.log(this.list[index].id)
+
+            //将该商品购买数量加入销售量中
+            this.$http.jsonp(
+                'http://' + this.regUrl + '/php/myorder/payed/figureplus.php',
+                {
+                    params: {
+                        ids: Number(this.list[index].goodid),
+                        shopnum: Number(this.list[index].shopnum)
+                    },
+                    jsonp: 'callback'
+                }
+            ).then((res) => {
+                if (res.ok) {
+                    res.json().then((res) => {
+                        console.log(res)
+                    })
+                }
+            })
+
             //点击支付更新ispay状态为1
             this.$http.jsonp(
                 'http://' + this.regUrl + '/php/myorder/paying/updatereceive.php',

@@ -67,8 +67,8 @@ export default {
         }
     },
     methods: {
-        receive(index) {
-            // console.log(this.list[index].id)
+        receive(index) { //去评价
+            console.log(this.list[index])
             //将商品id插入评论表
             this.goodid = this.list[index].goodid
             this.$http.jsonp(
@@ -91,6 +91,8 @@ export default {
                 }
             })
 
+            
+
             //更新该商品的状态为3，表示已经评价
             this.$http.jsonp(
                 'http://' + this.regUrl + '/php/myorder/payed/updateevaluate.php',
@@ -103,7 +105,7 @@ export default {
             ).then((res) => {
                 if (res.ok) {
                     res.json().then((res) => {
-                        console.log(res)
+                        // console.log(res)
                     })
                 }
             })

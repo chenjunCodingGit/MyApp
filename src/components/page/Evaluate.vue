@@ -2,9 +2,9 @@
     <div class="myevaluate">
         <TopBar title="评论"></TopBar>
         <div class="score">
-            <mu-radio label="差评" name="group" nativeValue="1" v-model="shopstar" class="demo-radio" />
-            <mu-radio label="中评" name="group" nativeValue="2" v-model="shopstar" class="demo-radio" />
-            <mu-radio label="好评" name="group" nativeValue="3" v-model="shopstar" class="demo-radio" />
+            <mu-radio label="差评" name="group" nativeValue="差评" v-model="shopstar" class="demo-radio" />
+            <mu-radio label="中评" name="group" nativeValue="中评" v-model="shopstar" class="demo-radio" />
+            <mu-radio label="好评" name="group" nativeValue="好评" v-model="shopstar" class="demo-radio" />
         </div>
         <p>说说你的使用心得吧！</p>
         <textarea v-model="content"></textarea>
@@ -26,7 +26,7 @@ export default {
     data() {
         return {
             username: '',
-            shopstar: '3',
+            shopstar: '好评',
             content: '',
             goodid: '0',
             toast: false,        //是否显示toast
@@ -54,7 +54,7 @@ export default {
                     ).then((res) => {
                         if (res.ok) {
                             res.json().then((res) => {
-                                console.log(res[0].id)
+                                // console.log(res[0].id)
                                 this.goodid = res[0].id
 
 
